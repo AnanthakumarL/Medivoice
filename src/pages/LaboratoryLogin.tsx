@@ -5,7 +5,11 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
-import { Microscope, TestTube, FlaskConical, Shield, ArrowRight, Beaker, Activity, BarChart3, CheckCircle2, Zap, Heart, User, Lock, Eye, EyeOff } from "lucide-react";
+import {
+  Microscope, TestTube, FlaskConical, Shield, ArrowRight,
+  Beaker, Activity, BarChart3, CheckCircle2, Zap, Heart,
+  Lock, Eye, EyeOff
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const LaboratoryLogin = () => {
@@ -36,12 +40,15 @@ const LaboratoryLogin = () => {
     }
 
     setIsLoading(true);
-    
+
     // Simulate login process
     setTimeout(() => {
       setIsLoading(false);
-      // Frontend-only demo login (lab)
-      localStorage.setItem("demo.user", JSON.stringify({ role: "lab", name: "Demo Lab Tech", email: credentials.labId + "@lab.local" }));
+      localStorage.setItem("demo.user", JSON.stringify({
+        role: "lab",
+        name: "Demo Lab Tech",
+        email: credentials.labId + "@lab.local"
+      }));
       toast({
         title: "Login Successful",
         description: "Welcome to Laboratory Portal (demo mode)",
@@ -51,25 +58,79 @@ const LaboratoryLogin = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-900 via-teal-900 to-cyan-900 relative overflow-hidden">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0">
-        <div className="absolute top-20 left-20 w-72 h-72 bg-emerald-500/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-20 right-20 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-teal-500/10 rounded-full blur-3xl animate-pulse delay-500"></div>
+    <div className="min-h-screen w-full relative overflow-hidden">
+      {/* Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-emerald-900 via-teal-900 to-cyan-900">
+        {/* Pattern */}
+        <div className="absolute inset-0 opacity-8">
+          <svg className="w-full h-full" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="lab-pattern" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+                <circle cx="20" cy="20" r="8" fill="currentColor" opacity="0.08" />
+                <rect x="10" y="10" width="4" height="20" fill="currentColor" opacity="0.06" />
+                <rect x="26" y="10" width="4" height="20" fill="currentColor" opacity="0.06" />
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#lab-pattern)" />
+          </svg>
+        </div>
+
+        {/* Floating Elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-1/4 right-1/4 opacity-5 animate-pulse">
+            <Microscope className="h-24 w-24 text-white transform rotate-12" />
+          </div>
+          <div className="absolute bottom-1/4 left-1/4 opacity-5 animate-pulse" style={{ animationDelay: '2s' }}>
+            <TestTube className="h-20 w-20 text-white transform -rotate-12" />
+          </div>
+          <div className="absolute top-1/2 right-1/2 opacity-5 animate-pulse" style={{ animationDelay: '4s' }}>
+            <FlaskConical className="h-16 w-16 text-white transform rotate-45" />
+          </div>
+          <div className="absolute top-3/4 right-1/3 opacity-5 animate-pulse" style={{ animationDelay: '6s' }}>
+            <BarChart3 className="h-18 w-18 text-white transform -rotate-6" />
+          </div>
+        </div>
+
+        {/* Grid Lines */}
+        <div className="absolute inset-0 opacity-4">
+          <div className="w-full h-full"
+            style={{
+              backgroundImage: `
+                linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px)
+              `,
+              backgroundSize: '60px 60px'
+            }} />
+        </div>
+
+        {/* Texture Overlay */}
+        <div className="absolute inset-0 opacity-3"
+          style={{
+            backgroundImage: `radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 1px, transparent 1px),
+                           radial-gradient(circle at 75% 75%, rgba(255,255,255,0.05) 1px, transparent 1px)`,
+            backgroundSize: '40px 40px, 60px 60px'
+          }} />
       </div>
 
-      {/* Grid Pattern Overlay */}
-      <div className="absolute inset-0 opacity-30">
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent"></div>
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/5 to-transparent"></div>
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-emerald-400/20 via-transparent to-cyan-400/10" />
+
+      {/* Animated Particles */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-white/20 rounded-full animate-ping"
+          style={{ animationDelay: '0s', animationDuration: '4s' }} />
+        <div className="absolute top-3/4 right-1/3 w-1 h-1 bg-white/30 rounded-full animate-ping"
+          style={{ animationDelay: '2s', animationDuration: '3s' }} />
+        <div className="absolute bottom-1/3 left-1/2 w-1.5 h-1.5 bg-white/25 rounded-full animate-ping"
+          style={{ animationDelay: '1s', animationDuration: '5s' }} />
       </div>
 
-      <div className="relative z-10 min-h-screen flex">
-        {/* Left Side - Laboratory Information */}
+      {/* Content */}
+      <div className="relative z-10 flex min-h-screen flex-row items-center justify-center text-white">
+        {/* Left Side */}
         <div className="hidden lg:flex lg:w-1/2 flex-col justify-center p-12 text-white">
           <div className="max-w-lg">
-            {/* Logo and Brand */}
+            {/* Logo */}
             <div className="flex items-center gap-4 mb-8">
               <div className="p-4 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-2xl shadow-2xl">
                 <Microscope className="h-10 w-10 text-white" />
@@ -82,7 +143,7 @@ const LaboratoryLogin = () => {
               </div>
             </div>
 
-            {/* Welcome Message */}
+            {/* Welcome */}
             <div className="mb-12">
               <h2 className="text-3xl font-bold mb-4 leading-tight">
                 Advanced Laboratory
@@ -96,7 +157,7 @@ const LaboratoryLogin = () => {
               </p>
             </div>
 
-            {/* Feature Highlights */}
+            {/* Features */}
             <div className="space-y-6">
               <div className="flex items-center gap-4">
                 <div className="p-3 bg-white/10 rounded-xl backdrop-blur-sm">
@@ -107,7 +168,6 @@ const LaboratoryLogin = () => {
                   <p className="text-emerald-200 text-sm">Comprehensive test tracking and processing</p>
                 </div>
               </div>
-
               <div className="flex items-center gap-4">
                 <div className="p-3 bg-white/10 rounded-xl backdrop-blur-sm">
                   <FlaskConical className="h-6 w-6 text-teal-300" />
@@ -117,7 +177,6 @@ const LaboratoryLogin = () => {
                   <p className="text-emerald-200 text-sm">Real-time sample status and location</p>
                 </div>
               </div>
-
               <div className="flex items-center gap-4">
                 <div className="p-3 bg-white/10 rounded-xl backdrop-blur-sm">
                   <BarChart3 className="h-6 w-6 text-cyan-300" />
@@ -127,7 +186,6 @@ const LaboratoryLogin = () => {
                   <p className="text-emerald-200 text-sm">Intelligent analysis and reporting</p>
                 </div>
               </div>
-
               <div className="flex items-center gap-4">
                 <div className="p-3 bg-white/10 rounded-xl backdrop-blur-sm">
                   <Shield className="h-6 w-6 text-purple-300" />
@@ -141,7 +199,7 @@ const LaboratoryLogin = () => {
           </div>
         </div>
 
-        {/* Right Side - Login Form */}
+        {/* Right Side - Login */}
         <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
           <div className="w-full max-w-md">
             {/* Mobile Logo */}
@@ -181,6 +239,7 @@ const LaboratoryLogin = () => {
 
               <CardContent className="space-y-6">
                 <form onSubmit={handleSubmit} className="space-y-6">
+                  {/* Lab ID */}
                   <div className="space-y-2">
                     <Label htmlFor="labId" className="text-slate-700 font-medium">
                       Laboratory ID
@@ -200,6 +259,7 @@ const LaboratoryLogin = () => {
                     </div>
                   </div>
 
+                  {/* Password */}
                   <div className="space-y-2">
                     <Label htmlFor="password" className="text-slate-700 font-medium">
                       Password
@@ -232,6 +292,7 @@ const LaboratoryLogin = () => {
                     </div>
                   </div>
 
+                  {/* Submit */}
                   <Button
                     type="submit"
                     className="w-full h-12 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
@@ -251,7 +312,7 @@ const LaboratoryLogin = () => {
                   </Button>
                 </form>
 
-                {/* Laboratory Features */}
+                {/* Features */}
                 <div className="pt-6 border-t border-slate-200">
                   <div className="text-center mb-4">
                     <h4 className="text-sm font-medium text-slate-700">Laboratory Features</h4>
@@ -276,7 +337,7 @@ const LaboratoryLogin = () => {
                   </div>
                 </div>
 
-                {/* Security Features */}
+                {/* Security */}
                 <div className="pt-4 border-t border-slate-200">
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div className="flex items-center gap-2 text-slate-600">

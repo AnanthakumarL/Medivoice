@@ -288,18 +288,18 @@ const AdminDashboard = () => {
   const unreadNotifications = notifications.filter(n => !n.read).length;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-slate-50/30 to-slate-100/20 flex">
+    <div className="min-h-screen bg-gradient-to-br from-white via-green-50/30 to-green-100/20 flex">
       {/* Side Navigation - Fixed Height */}
-      <div className="w-64 bg-white border-r border-slate-200 shadow-lg flex flex-col fixed h-screen">
+      <div className="w-64 bg-white border-r border-green-200 shadow-lg flex flex-col fixed h-screen">
         {/* Logo/Brand */}
         <div className="p-4 border-b border-slate-200">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-slate-600 to-slate-700 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center">
               <Shield className="h-5 w-5 text-white" />
             </div>
             <div>
-              <h1 className="text-lg font-bold text-slate-800">MediVoice</h1>
-              <p className="text-xs text-slate-600">Admin Portal</p>
+              <h1 className="text-lg font-bold text-green-800">MediVoice</h1>
+              <p className="text-xs text-green-700">Admin Portal</p>
             </div>
           </div>
         </div>
@@ -319,8 +319,8 @@ const AdminDashboard = () => {
                 onClick={() => setActiveTab(item.id)}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all duration-200 text-sm ${
                   activeTab === item.id
-                    ? "bg-slate-100 text-slate-700 border border-slate-200 shadow-sm"
-                    : "text-slate-600 hover:bg-slate-50 hover:text-slate-600"
+                    ? "bg-green-100 text-green-700 border border-green-200 shadow-sm"
+                    : "text-slate-600 hover:bg-green-50 hover:text-green-700"
                 }`}
               >
                 <item.icon className="h-4 w-4" />
@@ -331,14 +331,14 @@ const AdminDashboard = () => {
         </nav>
 
         {/* User Profile in Sidebar */}
-        <div className="p-3 border-t border-slate-200">
+        <div className="p-3 border-t border-green-200">
           <button
             onClick={() => setActiveTab("profile")}
-            className="w-full flex items-center gap-2 p-2 bg-slate-50 rounded-lg hover:bg-slate-100 transition-all duration-200 cursor-pointer"
+            className="w-full flex items-center gap-2 p-2 bg-green-50 rounded-lg hover:bg-green-100 transition-all duration-200 cursor-pointer"
           >
             <Avatar className="h-8 w-8 ring-2 ring-slate-400/40">
               <AvatarImage src="/placeholder.svg" alt="Admin" />
-              <AvatarFallback className="bg-gradient-to-br from-slate-600 to-slate-700 text-white font-bold text-sm">
+              <AvatarFallback className="bg-gradient-to-br from-green-500 to-green-600 text-white font-bold text-sm">
                 SW
               </AvatarFallback>
             </Avatar>
@@ -353,25 +353,25 @@ const AdminDashboard = () => {
       {/* Main Content Area - Adjusted for fixed sidebar */}
       <div className="flex-1 flex flex-col ml-64">
         {/* Top Navigation Bar */}
-        <header className="bg-white border-b border-slate-200 shadow-sm">
+        <header className="bg-white border-b border-green-200 shadow-sm">
           <div className="px-6 py-4">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-2xl font-bold text-slate-800">
+                <h2 className="text-2xl font-bold text-green-800">
                   {activeTab === "dashboard" && "Admin Dashboard"}
                   {activeTab === "users" && "User Management"}
                   {activeTab === "appointments" && "Appointment Management"}
                   {activeTab === "settings" && "System Settings"}
                   {activeTab === "help" && "Help & Support"}
                 </h2>
-                <p className="text-slate-600">Welcome back, {adminProfile.name} (ID: {adminProfile.adminId})</p>
+                <p className="text-green-700">Welcome back, {adminProfile.name} (ID: {adminProfile.adminId})</p>
               </div>
 
               {/* Top Right Actions */}
               <div className="flex items-center gap-3">
                 <Button
                   onClick={() => openModal('showAIInsightsModal')}
-                  className="bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white shadow-md"
+                  className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-md"
                 >
                   <Brain className="h-4 w-4 mr-2" />
                   AI Insights
@@ -384,9 +384,9 @@ const AdminDashboard = () => {
                         variant="ghost"
                         size="icon"
                         onClick={() => setActiveTab("profile")}
-                        className="hover:bg-slate-100"
+                        className="hover:bg-green-100"
                       >
-                        <User className="h-5 w-5 text-slate-600" />
+                        <User className="h-5 w-5 text-green-700" />
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>
@@ -402,9 +402,9 @@ const AdminDashboard = () => {
                         variant="ghost"
                         size="icon"
                         onClick={() => openModal('showNotificationsModal')}
-                        className="relative hover:bg-slate-100"
+                        className="relative hover:bg-green-100"
                       >
-                        <Bell className="h-5 w-5 text-slate-600" />
+                        <Bell className="h-5 w-5 text-green-700" />
                         {unreadNotifications > 0 && (
                           <span className="absolute -top-1 -right-1 h-5 w-5 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">
                             {unreadNotifications}
@@ -427,7 +427,7 @@ const AdminDashboard = () => {
                         onClick={handleLogout}
                         className="hover:bg-red-100 hover:text-red-600"
                       >
-                        <LogOut className="h-5 w-5 text-slate-600" />
+                        <LogOut className="h-5 w-5 text-green-700" />
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>
@@ -446,7 +446,7 @@ const AdminDashboard = () => {
           {activeTab === "dashboard" && (
             <div className="space-y-6">
               {/* Quick Actions */}
-              <Card className="border border-slate-200/60 shadow-lg">
+              <Card className="border border-green-200/60 shadow-lg">
                 <CardHeader>
                   <CardTitle>Quick Actions</CardTitle>
                   <CardDescription>Common administrative tasks</CardDescription>
@@ -454,7 +454,7 @@ const AdminDashboard = () => {
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <Button
-                      className="h-20 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+                      className="h-20 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
                       onClick={handleAddUser}
                       disabled={isProcessing}
                     >
@@ -462,7 +462,7 @@ const AdminDashboard = () => {
                       Add User
                     </Button>
                     <Button
-                      className="h-20 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+                      className="h-20 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white shadow-lg hover:shadow-xl transition-all duration-300"
                       onClick={handleScheduleAppointment}
                       disabled={isProcessing}
                     >
@@ -474,7 +474,7 @@ const AdminDashboard = () => {
               </Card>
 
               {/* Recent Activities */}
-              <Card className="border border-slate-200/60 shadow-lg">
+              <Card className="border border-green-200/60 shadow-lg">
                 <CardHeader>
                   <CardTitle>Recent Activities</CardTitle>
                   <CardDescription>Latest system activities and updates</CardDescription>
@@ -482,8 +482,8 @@ const AdminDashboard = () => {
                 <CardContent>
                   <div className="space-y-4">
                     {recentActivities.slice(0, 5).map((activity) => (
-                      <div key={activity.id} className="flex items-center gap-4 p-3 bg-slate-50 rounded-lg">
-                        <div className="w-2 h-2 bg-blue-500 rounded-full" />
+                      <div key={activity.id} className="flex items-center gap-4 p-3 bg-green-50 rounded-lg">
+                        <div className="w-2 h-2 bg-green-500 rounded-full" />
                         <div className="flex-1">
                           <p className="text-sm text-slate-800">
                             {activity.message}
@@ -560,11 +560,8 @@ const AdminDashboard = () => {
       {/* All Modals */}
       <AdminModals
         modals={modals}
-        selectedUser={selectedUser}
         onCloseModal={closeModal}
         onSubmit={handleModalSubmit}
-        onConfirmDelete={confirmDeleteUser}
-        onSaveUser={handleSaveUser}
       />
 
       {/* Notifications Modal */}

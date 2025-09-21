@@ -693,18 +693,18 @@ const DoctorDashboard = () => {
   const [selectedLabResult, setSelectedLabResult] = useState<any>(null);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-blue-50/30 to-blue-100/20 flex">
+    <div className="min-h-screen bg-gradient-to-br from-white via-green-50/30 to-green-100/20 flex">
         {/* Side Navigation - Fixed Height */}
-        <div className="w-64 bg-gradient-to-b from-blue-50 to-blue-100/50 border-r border-blue-200/60 shadow-2xl flex flex-col fixed h-screen backdrop-blur-sm">
+        <div className="w-64 bg-gradient-to-b from-green-50 to-green-100/50 border-r border-green-200/60 shadow-2xl flex flex-col fixed h-screen backdrop-blur-sm">
         {/* Logo/Brand */}
-        <div className="p-5 border-b border-blue-200/60 bg-white/80 backdrop-blur-sm">
+        <div className="p-5 border-b border-green-200/60 bg-white/80 backdrop-blur-sm">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
+            <div className="w-10 h-10 bg-gradient-to-br from-green-500 via-green-600 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
               <Stethoscope className="h-6 w-6 text-white" />
             </div>
             <div className="flex-1 min-w-0">
-              <h1 className="text-xl font-bold bg-gradient-to-r from-blue-700 to-indigo-700 bg-clip-text text-transparent truncate">MediVoice</h1>
-              <p className="text-xs text-blue-600 font-medium">Doctor Portal</p>
+              <h1 className="text-xl font-bold bg-gradient-to-r from-green-700 to-emerald-700 bg-clip-text text-transparent truncate">MediVoice</h1>
+              <p className="text-xs text-green-600 font-medium">Doctor Portal</p>
             </div>
           </div>
         </div>
@@ -727,11 +727,11 @@ const DoctorDashboard = () => {
                 onClick={() => item.id === 'ai-chatbot' ? navigate('/doctor/ai-chatbot') : setActiveTab(item.id)}
                 className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl text-left transition-all duration-300 text-sm font-medium group hover:scale-[1.02] hover:shadow-lg ${
                   activeTab === item.id
-                    ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30 border border-blue-400/30"
-                    : "text-slate-700 hover:bg-gradient-to-r hover:from-white/90 hover:to-blue-50/90 hover:text-blue-700 hover:shadow-md hover:border-blue-200/60 border border-transparent"
+                    ? "bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg shadow-green-500/30 border border-green-400/30"
+                    : "text-slate-700 hover:bg-gradient-to-r hover:from-white/90 hover:to-green-50/90 hover:text-green-700 hover:shadow-md hover:border-green-200/60 border border-transparent"
                 }`}
               >
-                <item.icon className={`h-5 w-5 transition-all duration-300 ${activeTab === item.id ? 'scale-110 text-blue-100' : 'group-hover:scale-110 group-hover:text-blue-600'}`} />
+                <item.icon className={`h-5 w-5 transition-all duration-300 ${activeTab === item.id ? 'scale-110 text-green-100' : 'group-hover:scale-110 group-hover:text-green-600'}`} />
                 <span className="font-medium transition-colors duration-300">{item.label}</span>
               </button>
             ))}
@@ -739,20 +739,20 @@ const DoctorDashboard = () => {
         </nav>
 
         {/* User Profile in Sidebar */}
-        <div className="p-4 border-t border-blue-200/60 bg-white/80 backdrop-blur-sm">
+        <div className="p-4 border-t border-green-200/60 bg-white/80 backdrop-blur-sm">
           <button
             onClick={() => setActiveTab("profile")}
-            className="w-full flex items-center gap-3 p-3 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl hover:from-blue-100 hover:to-indigo-100 transition-all duration-300 cursor-pointer group shadow-md hover:shadow-lg"
+            className="w-full flex items-center gap-3 p-3 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl hover:from-green-100 hover:to-emerald-100 transition-all duration-300 cursor-pointer group shadow-md hover:shadow-lg"
           >
-            <Avatar className="h-10 w-10 ring-2 ring-blue-400/40 shadow-lg">
+            <Avatar className="h-10 w-10 ring-2 ring-green-400/40 shadow-lg">
               <AvatarImage src="/placeholder.svg" alt="Doctor" />
-              <AvatarFallback className="bg-gradient-to-br from-blue-500 to-indigo-600 text-white font-bold text-sm">
+              <AvatarFallback className="bg-gradient-to-br from-green-500 to-emerald-600 text-white font-bold text-sm">
                 DS
               </AvatarFallback>
             </Avatar>
             <div className="flex-1 text-left">
-              <p className="font-semibold text-slate-800 text-sm group-hover:text-blue-700 transition-colors">{doctorProfile.name}</p>
-              <p className="text-xs text-blue-600">{doctorProfile.specialization}</p>
+              <p className="font-semibold text-slate-800 text-sm group-hover:text-green-700 transition-colors">{doctorProfile.name}</p>
+              <p className="text-xs text-green-600">{doctorProfile.specialization}</p>
             </div>
           </button>
         </div>
@@ -761,11 +761,11 @@ const DoctorDashboard = () => {
       {/* Main Content Area - Adjusted for fixed sidebar */}
       <div className="flex-1 flex flex-col ml-64">
         {/* Top Navigation Bar */}
-        <header className="relative bg-gradient-to-r from-white via-blue-50/30 to-white border-b border-blue-200/60 shadow-lg backdrop-blur-sm z-[1000]">
+        <header className="relative bg-gradient-to-r from-white via-green-50/30 to-white border-b border-green-200/60 shadow-lg backdrop-blur-sm z-[1000]">
           <div className="px-8 py-5">
             <div className="flex items-center justify-between min-h-[60px]">
               <div className="flex-1">
-                <h2 className="text-3xl font-bold bg-gradient-to-r from-slate-800 to-blue-800 bg-clip-text text-transparent leading-tight">
+                <h2 className="text-3xl font-bold bg-gradient-to-r from-slate-800 to-green-800 bg-clip-text text-transparent leading-tight">
                   {activeTab === "dashboard" && "Doctor Dashboard"}
                   {activeTab === "critical" && "Critical Alerts"}
                   {activeTab === "patients" && "Patient Management"}
@@ -785,9 +785,9 @@ const DoctorDashboard = () => {
                     variant="ghost"
                     size="icon-lg"
                     onClick={() => setIsNotificationsOpen(prev => !prev)}
-                    className="hover:bg-blue-100/80 relative rounded-full shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02] group z-[1001]"
+                    className="hover:bg-green-100/80 relative rounded-full shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02] group z-[1001]"
                   >
-                    <Bell className="h-6 w-6 text-slate-600 group-hover:text-blue-600 transition-colors duration-300" />
+                    <Bell className="h-6 w-6 text-slate-600 group-hover:text-green-600 transition-colors duration-300" />
                     {notifications.length > 0 && (
                       <span className="absolute -top-1 -right-1 inline-flex items-center justify-center px-2 min-w-[20px] h-5 rounded-full text-[10px] font-bold bg-gradient-to-r from-red-500 to-red-600 text-white animate-pulse shadow-lg group-hover:from-red-600 group-hover:to-red-700 transition-all duration-300">
                         {notifications.length}
@@ -795,13 +795,13 @@ const DoctorDashboard = () => {
                     )}
                   </Button>
                   {isNotificationsOpen && (
-                    <div className="absolute top-full right-0 mt-2 w-80 z-dropdown bg-white/95 backdrop-blur-lg border border-blue-200/60 rounded-xl shadow-2xl">
+                    <div className="absolute top-full right-0 mt-2 w-80 z-dropdown bg-white/95 backdrop-blur-lg border border-green-200/60 rounded-xl shadow-2xl">
                       {/* Arrow indicator */}
-                      <div className="absolute -top-2 right-4 w-4 h-4 bg-white/95 border-l border-t border-blue-200/60 transform rotate-45 z-dropdown"></div>
+                      <div className="absolute -top-2 right-4 w-4 h-4 bg-white/95 border-l border-t border-green-200/60 transform rotate-45 z-dropdown"></div>
                       
-                      <div className="relative p-4 border-b border-blue-200/60 flex items-center justify-between bg-gradient-to-r from-blue-50/80 to-indigo-50/80 rounded-t-xl">
+                      <div className="relative p-4 border-b border-green-200/60 flex items-center justify-between bg-gradient-to-r from-green-50/80 to-emerald-50/80 rounded-t-xl">
                         <div className="flex items-center gap-2">
-                          <Bell className="h-5 w-5 text-blue-600" />
+                          <Bell className="h-5 w-5 text-green-600" />
                           <span className="font-semibold text-slate-800">Notifications</span>
                         </div>
                         {notifications.length > 0 && (
@@ -846,8 +846,8 @@ const DoctorDashboard = () => {
                                 <div className="flex items-start gap-3">
                                   <div className={`mt-1 w-3 h-3 rounded-full shadow-sm transition-all duration-300 group-hover:scale-110 group-hover:shadow-md ${
                                     n.type === 'urgent' ? 'bg-red-500 group-hover:bg-red-600' : 
-                                    n.type === 'lab' ? 'bg-blue-500 group-hover:bg-blue-600' : 
-                                    n.type === 'appointment' ? 'bg-blue-500 group-hover:bg-blue-600' : 'bg-slate-400 group-hover:bg-slate-500'
+                                    n.type === 'lab' ? 'bg-green-500 group-hover:bg-green-600' : 
+                                    n.type === 'appointment' ? 'bg-green-500 group-hover:bg-green-600' : 'bg-slate-400 group-hover:bg-slate-500'
                                   }`}></div>
                                   <div className="flex-1">
                                     <p className="text-sm font-medium text-slate-800 leading-relaxed group-hover:text-slate-900 transition-colors">{n.message}</p>
@@ -870,16 +870,16 @@ const DoctorDashboard = () => {
                   )}
                 </div>
                 {isProcessing && (
-                  <div className="flex items-center justify-center gap-2 px-3 py-2 bg-blue-50 border border-blue-200 rounded-lg">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
-                    <span className="text-sm text-blue-600 font-medium">Processing...</span>
+                  <div className="flex items-center justify-center gap-2 px-3 py-2 bg-green-50 border border-green-200 rounded-lg">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-green-600"></div>
+                    <span className="text-sm text-green-600 font-medium">Processing...</span>
                   </div>
                 )}
 
                 {/* Replace MediVo AI button to navigate to standalone page */}
                 <Button
                   onClick={() => navigate("/doctor/ai-chatbot")}
-                  className="bg-gradient-to-r from-blue-500 via-blue-600 to-indigo-600 hover:from-blue-600 hover:via-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 px-6 py-3 rounded-xl font-medium hover:scale-[1.02] z-10"
+                  className="bg-gradient-to-r from-green-500 via-green-600 to-emerald-600 hover:from-green-600 hover:via-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 px-6 py-3 rounded-xl font-medium hover:scale-[1.02] z-10"
                   disabled={isProcessing}
                 >
                   <Zap className="h-5 w-5 mr-2" />
@@ -893,9 +893,9 @@ const DoctorDashboard = () => {
                         variant="ghost"
                         size="icon-lg"
                         onClick={handleProfileClick}
-                        className="hover:bg-blue-100 hover:scale-[1.02] transition-all duration-300 rounded-full shadow-sm hover:shadow-md group z-10"
+                        className="hover:bg-green-100 hover:scale-[1.02] transition-all duration-300 rounded-full shadow-sm hover:shadow-md group z-10"
                       >
-                        <User className="h-5 w-5 text-slate-600 group-hover:text-blue-600 transition-colors duration-300" />
+                        <User className="h-5 w-5 text-slate-600 group-hover:text-green-600 transition-colors duration-300" />
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>
@@ -934,10 +934,10 @@ const DoctorDashboard = () => {
               {/* Two-Column Layout after removing in-page Critical Alerts */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
                 {/* Left Column - Today's Schedule */}
-                <Card className="lg:col-span-2 border border-blue-200/60 shadow-xl bg-gradient-to-br from-white via-blue-50/20 to-white hover:shadow-2xl transition-all duration-500 hover:scale-[1.005] rounded-2xl overflow-hidden">
-                  <CardHeader className="bg-gradient-to-r from-blue-100/90 via-indigo-50/80 to-blue-100/90 border-b border-blue-200/60 p-6">
+                <Card className="lg:col-span-2 border border-green-200/60 shadow-xl bg-gradient-to-br from-white via-green-50/20 to-white hover:shadow-2xl transition-all duration-500 hover:scale-[1.005] rounded-2xl overflow-hidden">
+                  <CardHeader className="bg-gradient-to-r from-green-100/90 via-green-50/80 to-green-100/90 border-b border-green-200/60 p-6">
                     <CardTitle className="flex items-center gap-3 text-xl font-bold text-slate-800">
-                      <div className="p-2 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-lg">
+                      <div className="p-2 bg-gradient-to-br from-green-500 to-green-600 rounded-xl shadow-lg">
                         <Calendar className="h-6 w-6 text-white" />
                       </div>
                       Today's Schedule
@@ -946,14 +946,14 @@ const DoctorDashboard = () => {
                   </CardHeader>
                   <CardContent className="p-6 space-y-4">
                     {appointments.slice(0, 3).map((appointment) => (
-                      <div key={appointment.id} className="flex items-center gap-4 p-4 bg-gradient-to-r from-blue-50/90 to-indigo-50/70 rounded-xl hover:from-blue-100/90 hover:to-indigo-100/80 hover:shadow-md transition-all duration-300 border border-blue-200/40 cursor-pointer group hover:scale-[1.005] hover:border-blue-300/60">
+                      <div key={appointment.id} className="flex items-center gap-4 p-4 bg-gradient-to-r from-green-50/90 to-green-100/70 rounded-xl hover:from-green-100/90 hover:to-green-200/80 hover:shadow-md transition-all duration-300 border border-green-200/40 cursor-pointer group hover:scale-[1.005] hover:border-green-300/60">
                         <div className="text-center min-w-[60px] bg-white rounded-lg p-2 shadow-sm group-hover:shadow-md transition-all duration-300">
-                          <p className="text-sm font-bold text-blue-600 group-hover:text-blue-700 transition-colors">{appointment.time}</p>
-                          <p className="text-xs text-blue-500 group-hover:text-blue-600 transition-colors">{appointment.duration}</p>
+                          <p className="text-sm font-bold text-green-600 group-hover:text-green-700 transition-colors">{appointment.time}</p>
+                          <p className="text-xs text-green-500 group-hover:text-green-600 transition-colors">{appointment.duration}</p>
                         </div>
-                        <Avatar className="h-10 w-10 ring-2 ring-blue-400/40 shadow-md group-hover:ring-blue-500/60 group-hover:shadow-lg transition-all duration-300">
+                        <Avatar className="h-10 w-10 ring-2 ring-green-400/40 shadow-md group-hover:ring-green-500/60 group-hover:shadow-lg transition-all duration-300">
                           <AvatarImage src={appointment.avatar} alt={appointment.patient} />
-                          <AvatarFallback className="bg-gradient-to-br from-blue-500 to-indigo-600 text-white font-bold text-sm group-hover:from-blue-600 group-hover:to-indigo-700 transition-all duration-300">
+                          <AvatarFallback className="bg-gradient-to-br from-green-500 to-green-600 text-white font-bold text-sm group-hover:from-green-600 group-hover:to-green-700 transition-all duration-300">
                             {appointment.patient.split(' ').map(n => n[0]).join('')}
                           </AvatarFallback>
                         </Avatar>
@@ -970,7 +970,7 @@ const DoctorDashboard = () => {
                       </div>
                     ))}
                     <Button
-                      className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.01] rounded-xl font-medium z-10"
+                      className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.01] rounded-xl font-medium z-10"
                       onClick={showScheduleView}
                       disabled={isProcessing}
                     >
@@ -981,10 +981,10 @@ const DoctorDashboard = () => {
                 </Card>
 
                 {/* Right Column - Quick Actions */}
-                <Card className="border border-blue-200/60 shadow-lg bg-gradient-to-br from-white/95 to-blue-50/95 hover:shadow-xl transition-all duration-300">
-                  <CardHeader className="bg-gradient-to-r from-blue-100/80 to-blue-50/80 border-b border-blue-200/60">
+                <Card className="border border-green-200/60 shadow-lg bg-gradient-to-br from-white/95 to-green-50/95 hover:shadow-xl transition-all duration-300">
+                  <CardHeader className="bg-gradient-to-r from-green-100/80 to-green-50/80 border-b border-green-200/60">
                     <CardTitle className="flex items-center gap-2 text-lg font-bold text-slate-800">
-                      <Zap className="h-5 w-5 text-blue-600" />
+                      <Zap className="h-5 w-5 text-green-600" />
                       Quick Actions
                     </CardTitle>
                     <CardDescription className="text-slate-600">Frequently used tools and shortcuts</CardDescription>
@@ -992,7 +992,7 @@ const DoctorDashboard = () => {
                   <CardContent className="p-6 space-y-4">
                     <Button
                       variant="outline"
-                      className="w-full justify-start border-blue-300 text-blue-700 hover:bg-blue-50 hover:border-blue-400 transition-all duration-300 rounded-xl py-3"
+                      className="w-full justify-start border-green-300 text-green-700 hover:bg-green-50 hover:border-green-400 transition-all duration-300 rounded-xl py-3"
                       onClick={doctorActions.scheduleAppointment}
                       disabled={isProcessing}
                     >
@@ -1002,7 +1002,7 @@ const DoctorDashboard = () => {
 
                     <Button
                       variant="outline"
-                      className="w-full justify-start border-blue-300 text-blue-700 hover:bg-blue-50 hover:border-blue-400 transition-all duration-300 rounded-xl py-3"
+                      className="w-full justify-start border-green-300 text-green-700 hover:bg-green-50 hover:border-green-400 transition-all duration-300 rounded-xl py-3"
                       onClick={doctorActions.searchPatients}
                       disabled={isProcessing}
                     >
@@ -1038,10 +1038,10 @@ const DoctorDashboard = () => {
           {/* Patient List Tab Content */}
           {activeTab === "patients" && (
             <div className="space-y-6">
-              <Card className="border border-blue-200/60 shadow-lg bg-gradient-to-br from-white/95 to-blue-50/95">
-                <CardHeader className="bg-gradient-to-r from-blue-100/80 to-blue-50/80 border-b border-blue-200/60">
+              <Card className="border border-green-200/60 shadow-lg bg-gradient-to-br from-white/95 to-green-50/95">
+                <CardHeader className="bg-gradient-to-r from-green-100/80 to-green-50/80 border-b border-green-200/60">
                   <CardTitle className="flex items-center gap-2 text-slate-800">
-                    <Users className="h-5 w-5 text-blue-600" />
+                    <Users className="h-5 w-5 text-green-600" />
                     Active Patients
                   </CardTitle>
                   <CardDescription className="text-slate-600">Patients with current access permissions</CardDescription>
@@ -1055,7 +1055,7 @@ const DoctorDashboard = () => {
                         placeholder="Search patients by name or ID..."
                         value={patientSearch}
                         onChange={(e) => setPatientSearch(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2.5 border border-blue-200 rounded-full focus:border-blue-400 focus:ring-2 focus:ring-blue-200 focus:outline-none hover:border-blue-300 hover:shadow-md transition-all duration-300"
+                        className="w-full pl-10 pr-4 py-2.5 border border-green-200 rounded-full focus:border-green-400 focus:ring-2 focus:ring-green-200 focus:outline-none hover:border-green-300 hover:shadow-md transition-all duration-300"
                       />
                     </div>
                   </div>
@@ -1063,12 +1063,12 @@ const DoctorDashboard = () => {
                     {patientList
                       .filter(p => p.name.toLowerCase().includes(patientSearch.toLowerCase()) || p.patientId.toLowerCase().includes(patientSearch.toLowerCase()))
                       .map((patient) => (
-                      <div key={patient.id} className="p-4 border border-blue-200/60 rounded-xl bg-white hover:shadow-md hover:shadow-blue-500/10 transition-all duration-300 hover:scale-[1.005] hover:border-blue-300/70 cursor-pointer group">
+                      <div key={patient.id} className="p-4 border border-green-200/60 rounded-xl bg-white hover:shadow-md hover:shadow-green-500/10 transition-all duration-300 hover:scale-[1.005] hover:border-green-300/70 cursor-pointer group">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-4">
-                            <Avatar className="h-10 w-10 ring-2 ring-blue-400/40 group-hover:ring-blue-500/60 group-hover:shadow-md transition-all duration-300">
+                            <Avatar className="h-10 w-10 ring-2 ring-green-400/40 group-hover:ring-green-500/60 group-hover:shadow-md transition-all duration-300">
                               <AvatarImage src={patient.avatar} alt={patient.name} />
-                              <AvatarFallback className="bg-gradient-to-br from-blue-500 to-blue-600 text-white font-bold group-hover:from-blue-600 group-hover:to-blue-700 transition-all duration-300">
+                              <AvatarFallback className="bg-gradient-to-br from-green-500 to-green-600 text-white font-bold group-hover:from-green-600 group-hover:to-green-700 transition-all duration-300">
                                 {patient.name.split(' ').map(n => n[0]).join('')}
                               </AvatarFallback>
                             </Avatar>
@@ -1082,12 +1082,12 @@ const DoctorDashboard = () => {
                             </div>
                           </div>
                           <div className="flex items-center gap-3">
-                            <Badge className={`${patient.type === 'Outpatient' ? 'bg-blue-100 text-blue-700 group-hover:bg-blue-200' : 'bg-slate-100 text-slate-700 group-hover:bg-slate-200'} border-0 transition-all duration-300`}>{patient.type}</Badge>
+                            <Badge className={`${patient.type === 'Outpatient' ? 'bg-green-100 text-green-700 group-hover:bg-green-200' : 'bg-slate-100 text-slate-700 group-hover:bg-slate-200'} border-0 transition-all duration-300`}>{patient.type}</Badge>
                             <Badge className={`${patient.status === 'Active' ? 'bg-green-100 text-green-700 group-hover:bg-green-200' : 'bg-slate-100 text-slate-700 group-hover:bg-slate-200'} border-0 transition-all duration-300`}>{patient.status}</Badge>
                             <Button
                               variant="link"
                               size="sm"
-                              className="text-blue-600 hover:text-blue-700 px-1 hover:bg-blue-50 rounded-lg transition-all duration-300"
+                              className="text-green-600 hover:text-green-700 px-1 hover:bg-green-50 rounded-lg transition-all duration-300"
                               onClick={() => doctorActions.viewPatient(patient)}
                               disabled={isProcessing}
                             >
@@ -1152,9 +1152,9 @@ const DoctorDashboard = () => {
                     {notifications
                       .filter(n => n.type === 'urgent' || n.type === 'lab')
                       .map((n) => (
-                        <div key={n.id} className={`p-4 rounded-lg border-l-4 ${n.type === 'urgent' ? 'border-l-red-600 bg-red-50' : 'border-l-blue-600 bg-blue-50'}`}>
+                        <div key={n.id} className={`p-4 rounded-lg border-l-4 ${n.type === 'urgent' ? 'border-l-red-600 bg-red-50' : 'border-l-green-600 bg-green-50'}`}>
                           <div className="flex items-start gap-3">
-                            {n.type === 'urgent' ? <AlertTriangle className="h-4 w-4 text-red-600 mt-0.5" /> : <TestTube className="h-4 w-4 text-blue-600 mt-0.5" />}
+                            {n.type === 'urgent' ? <AlertTriangle className="h-4 w-4 text-red-600 mt-0.5" /> : <TestTube className="h-4 w-4 text-green-600 mt-0.5" />}
                             <div className="flex-1">
                               <p className="text-sm font-medium text-slate-800">{n.message}</p>
                               <p className="text-xs text-slate-600 mt-1">{n.time}</p>
@@ -1171,10 +1171,10 @@ const DoctorDashboard = () => {
           {/* Appointments Tab Content */}
           {activeTab === "appointments" && (
             <div className="space-y-6">
-              <Card className="border border-blue-200/60 shadow-lg bg-gradient-to-br from-white/95 to-blue-50/95">
-                <CardHeader className="bg-gradient-to-r from-blue-100/80 to-blue-50/80 border-b border-blue-200/60">
+              <Card className="border border-green-200/60 shadow-lg bg-gradient-to-br from-white/95 to-green-50/95">
+                <CardHeader className="bg-gradient-to-r from-green-100/80 to-green-50/80 border-b border-green-200/60">
                   <CardTitle className="flex items-center gap-2 text-slate-800">
-                    <Calendar className="h-5 w-5 text-blue-600" />
+                    <Calendar className="h-5 w-5 text-green-600" />
                     Today's Appointments
                   </CardTitle>
                   <CardDescription className="text-slate-600">Manage your daily appointment schedule</CardDescription>
@@ -1188,11 +1188,11 @@ const DoctorDashboard = () => {
                         placeholder="Search by patient name, time, or ID..."
                         value={patientSearch}
                         onChange={(e) => setPatientSearch(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2.5 border border-blue-200 rounded-full focus:border-blue-400 focus:ring-2 focus:ring-blue-200 focus:outline-none hover:border-blue-300 hover:shadow-md transition-all duration-300"
+                        className="w-full pl-10 pr-4 py-2.5 border border-green-200 rounded-full focus:border-green-400 focus:ring-2 focus:ring-green-200 focus:outline-none hover:border-green-300 hover:shadow-md transition-all duration-300"
                       />
                     </div>
                     <Button
-                      className="ml-4 flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white hover:scale-[1.02] transition-all duration-300 hover:shadow-lg z-10"
+                      className="ml-4 flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white hover:scale-[1.02] transition-all duration-300 hover:shadow-lg z-10"
                       onClick={doctorActions.scheduleAppointment}
                       disabled={isProcessing}
                     >
@@ -1211,16 +1211,16 @@ const DoctorDashboard = () => {
                         );
                       })
                       .map((appointment) => (
-                      <div key={appointment.id} className="p-4 border border-blue-200/60 rounded-xl bg-white hover:shadow-md hover:shadow-blue-500/10 transition-all duration-300 hover:scale-[1.005] hover:border-blue-300/70 cursor-pointer group z-10">
+                      <div key={appointment.id} className="p-4 border border-green-200/60 rounded-xl bg-white hover:shadow-md hover:shadow-green-500/10 transition-all duration-300 hover:scale-[1.005] hover:border-green-300/70 cursor-pointer group z-10">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-4">
                             <div className="text-center min-w-[60px] group-hover:scale-105 transition-transform duration-300">
                               <div className="text-lg font-bold text-slate-800 group-hover:text-slate-900 transition-colors duration-300">{appointment.time}</div>
                               <div className="text-xs text-slate-600 group-hover:text-slate-700 transition-colors duration-300">{appointment.duration}</div>
                             </div>
-                            <Avatar className="h-10 w-10 ring-2 ring-blue-400/40 group-hover:ring-blue-500/60 group-hover:shadow-md transition-all duration-300">
+                            <Avatar className="h-10 w-10 ring-2 ring-green-400/40 group-hover:ring-green-500/60 group-hover:shadow-md transition-all duration-300">
                               <AvatarImage src={appointment.avatar} alt={appointment.patient} />
-                              <AvatarFallback className="bg-gradient-to-br from-blue-500 to-blue-600 text-white font-bold group-hover:from-blue-600 group-hover:to-blue-700 transition-all duration-300">
+                              <AvatarFallback className="bg-gradient-to-br from-green-500 to-green-600 text-white font-bold group-hover:from-green-600 group-hover:to-green-700 transition-all duration-300">
                                 {appointment.patient.split(' ').map(n => n[0]).join('')}
                               </AvatarFallback>
                             </Avatar>
@@ -1234,12 +1234,12 @@ const DoctorDashboard = () => {
                             </div>
                           </div>
                           <div className="flex items-center gap-3">
-                            <Badge className={`${appointment.type === 'Follow-up' ? 'bg-blue-100 text-blue-700 group-hover:bg-blue-200' : appointment.type === 'Consultation' ? 'bg-slate-100 text-slate-700 group-hover:bg-slate-200' : appointment.type === 'Check-up' ? 'bg-green-100 text-green-700 group-hover:bg-green-200' : 'bg-red-100 text-red-700 group-hover:bg-red-200'} border-0 transition-all duration-300`}>{appointment.type}</Badge>
+                            <Badge className={`${appointment.type === 'Follow-up' ? 'bg-green-100 text-green-700 group-hover:bg-green-200' : appointment.type === 'Consultation' ? 'bg-slate-100 text-slate-700 group-hover:bg-slate-200' : appointment.type === 'Check-up' ? 'bg-green-100 text-green-700 group-hover:bg-green-200' : 'bg-red-100 text-red-700 group-hover:bg-red-200'} border-0 transition-all duration-300`}>{appointment.type}</Badge>
                             <Badge className={`${appointment.status === 'Confirmed' ? 'bg-green-100 text-green-700 group-hover:bg-green-200' : appointment.status === 'Pending' ? 'bg-yellow-100 text-yellow-700 group-hover:bg-yellow-200' : 'bg-red-100 text-red-700 group-hover:bg-red-200'} border-0 transition-all duration-300`}>{appointment.status}</Badge>
                             <Button
                               variant="link"
                               size="sm"
-                              className="text-blue-600 hover:text-blue-700 px-1 hover:bg-blue-50 rounded-lg transition-all duration-300"
+                              className="text-green-600 hover:text-green-700 px-1 hover:bg-green-50 rounded-lg transition-all duration-300"
                               onClick={() => doctorActions.viewPatient({ name: appointment.patient })}
                               disabled={isProcessing}
                             >
@@ -1270,7 +1270,7 @@ const DoctorDashboard = () => {
           {activeTab === "reports" && (
             <div className="space-y-6">
               {/* Search Bar Section - Following Patient Management Pattern */}
-              <div className="bg-gradient-to-r from-white/95 to-blue-50/95 backdrop-blur-sm rounded-xl p-4 border border-blue-200/60 shadow-sm">
+              <div className="bg-gradient-to-r from-white/95 to-green-50/95 backdrop-blur-sm rounded-xl p-4 border border-green-200/60 shadow-sm">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4 flex-1">
                     <div className="relative flex-1 max-w-md">
@@ -1280,7 +1280,7 @@ const DoctorDashboard = () => {
                         placeholder="Search lab results by patient name, test type, or status..."
                         value={labResultsSearch}
                         onChange={(e) => setLabResultsSearch(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2.5 border border-blue-200 rounded-full focus:border-blue-400 focus:ring-2 focus:ring-blue-200 focus:outline-none hover:border-blue-300 hover:shadow-md transition-all duration-300"
+                        className="w-full pl-10 pr-4 py-2.5 border border-green-200 rounded-full focus:border-green-400 focus:ring-2 focus:ring-green-200 focus:outline-none hover:border-green-300 hover:shadow-md transition-all duration-300"
                       />
                     </div>
                     <div className="flex items-center gap-2">
@@ -1288,14 +1288,14 @@ const DoctorDashboard = () => {
                         <select
                           value={labFilter}
                           onChange={(e) => setLabFilter(e.target.value)}
-                          className="w-full min-w-[180px] px-4 py-3 pl-12 pr-10 border border-slate-300/50 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-blue-400 transition-all duration-300 bg-gradient-to-r from-white to-blue-50/30 backdrop-blur-sm text-sm font-medium shadow-lg hover:shadow-xl appearance-none cursor-pointer"
+                          className="w-full min-w-[180px] px-4 py-3 pl-12 pr-10 border border-slate-300/50 rounded-2xl focus:ring-2 focus:ring-green-500 focus:border-green-400 transition-all duration-300 bg-gradient-to-r from-white to-green-50/30 backdrop-blur-sm text-sm font-medium shadow-lg hover:shadow-xl appearance-none cursor-pointer"
                         >
                           <option value="all">All Results</option>
                           <option value="Critical">Critical</option>
                           <option value="Ready for Review">Ready for Review</option>
                           <option value="Approved">Approved</option>
                         </select>
-                        <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-blue-500">
+                        <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-green-500">
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.707A1 1 0 013 7V4z" />
                           </svg>
@@ -1312,7 +1312,7 @@ const DoctorDashboard = () => {
                   <div className="flex items-center gap-3">
                     <Button
                       variant="outline"
-                      className="border-blue-300 text-blue-600 hover:bg-blue-50"
+                      className="border-green-300 text-green-600 hover:bg-green-50"
                       onClick={() => toast({ title: "Refreshed!", description: "Lab results updated with latest data." })}
                       disabled={isProcessing}
                     >
@@ -1337,12 +1337,12 @@ const DoctorDashboard = () => {
                     return matchesFilter && matchesSearch;
                   })
                   .map((result) => (
-                    <Card key={result.id} className="border-slate-200 shadow-sm hover:shadow-md transition-all duration-200">
+                    <Card key={result.id} className="border-green-200 shadow-sm hover:shadow-md transition-all duration-200">
                       <div className="p-4">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-4">
                             <Avatar className="h-12 w-12 border-2 border-white shadow-sm">
-                              <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold">
+                              <div className="w-full h-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center text-white font-bold">
                                 {result.patient.split(' ').map(n => n[0]).join('')}
                               </div>
                             </Avatar>
@@ -1381,7 +1381,7 @@ const DoctorDashboard = () => {
                                 setSelectedLabResult(result);
                                 setDemoState(prev => ({ ...prev, showLabResultsModal: true }));
                               }}
-                              className="border-blue-300 text-blue-600 hover:bg-blue-50"
+                              className="border-green-300 text-green-600 hover:bg-green-50"
                               disabled={isProcessing}
                             >
                               <FileText className="h-4 w-4 mr-1" />
@@ -1463,7 +1463,7 @@ const DoctorDashboard = () => {
           {activeTab === "profile" && (
             <div className="space-y-6">
               {/* Search Bar Section - Following Patient Management Pattern */}
-              <div className="bg-gradient-to-r from-white/95 to-blue-50/95 backdrop-blur-sm rounded-xl p-4 border border-blue-200/60 shadow-sm">
+              <div className="bg-gradient-to-r from-white/95 to-green-50/95 backdrop-blur-sm rounded-xl p-4 border border-green-200/60 shadow-sm">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4 flex-1">
                     <div className="relative flex-1 max-w-md">
@@ -1473,7 +1473,7 @@ const DoctorDashboard = () => {
                         placeholder="Search settings, preferences, or profile information..."
                         value={patientSearch}
                         onChange={(e) => setPatientSearch(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2.5 border border-blue-200 rounded-full focus:border-blue-400 focus:ring-2 focus:ring-blue-200 focus:outline-none hover:border-blue-300 hover:shadow-md transition-all duration-300"
+                        className="w-full pl-10 pr-4 py-2.5 border border-green-200 rounded-full focus:border-green-400 focus:ring-2 focus:ring-green-200 focus:outline-none hover:border-green-300 hover:shadow-md transition-all duration-300"
                       />
                     </div>
                   </div>
@@ -1481,7 +1481,7 @@ const DoctorDashboard = () => {
                   <div className="flex items-center gap-3">
                     <Button
                       variant="outline"
-                      className="border-blue-300 text-blue-600 hover:bg-blue-50"
+                      className="border-green-300 text-green-600 hover:bg-green-50"
                       onClick={() => toast({ title: "Profile Synced", description: "Your profile has been synchronized with the hospital database." })}
                       disabled={isProcessing}
                     >
@@ -1489,7 +1489,7 @@ const DoctorDashboard = () => {
                       Sync Profile
                     </Button>
                     <Button
-                      className="bg-blue-600 hover:bg-blue-700 text-white"
+                      className="bg-green-600 hover:bg-green-700 text-white"
                       onClick={showProfileModal}
                       disabled={isProcessing}
                     >
@@ -1506,7 +1506,7 @@ const DoctorDashboard = () => {
                 <Card className="border border-slate-200 shadow-lg bg-white">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
-                      <Stethoscope className="h-5 w-5 text-blue-600" />
+                      <Stethoscope className="h-5 w-5 text-green-600" />
                       Professional Information
                     </CardTitle>
                   </CardHeader>
@@ -1541,17 +1541,17 @@ const DoctorDashboard = () => {
                   </CardContent>
                 </Card>
 
-                <Card className="border border-blue-200/60 shadow-lg bg-white">
-                  <CardHeader className="bg-gradient-to-r from-blue-100/80 to-blue-50/80 border-b border-blue-200/60">
+                <Card className="border border-green-200/60 shadow-lg bg-white">
+                  <CardHeader className="bg-gradient-to-r from-green-100/80 to-green-50/80 border-b border-green-200/60">
                     <CardTitle className="flex items-center gap-2">
-                      <Settings className="h-5 w-5 text-blue-600" />
+                      <Settings className="h-5 w-5 text-green-600" />
                       Settings & Preferences
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="p-6 space-y-4">
                     <Button
                       variant="outline"
-                      className="w-full justify-start border-blue-300 text-blue-600 hover:bg-blue-50"
+                      className="w-full justify-start border-green-300 text-green-600 hover:bg-green-50"
                       onClick={showTimeSlotModal}
                       disabled={isProcessing}
                     >
@@ -1560,7 +1560,7 @@ const DoctorDashboard = () => {
                     </Button>
                     <Button
                       variant="outline"
-                      className="w-full justify-start border-blue-300 text-blue-600 hover:bg-blue-50"
+                      className="w-full justify-start border-green-300 text-green-600 hover:bg-green-50"
                       onClick={showNotificationModal}
                       disabled={isProcessing}
                     >
@@ -1569,7 +1569,7 @@ const DoctorDashboard = () => {
                     </Button>
                     <Button
                       variant="outline"
-                      className="w-full justify-start border-blue-300 text-blue-600 hover:bg-blue-50"
+                      className="w-full justify-start border-green-300 text-green-600 hover:bg-green-50"
                       onClick={() => toast({ title: "Settings Updated!", description: "Department settings configured successfully." })}
                       disabled={isProcessing}
                     >
@@ -1585,7 +1585,7 @@ const DoctorDashboard = () => {
           {/* Help Tab Content */}
           {activeTab === "help" && (
             <div className="space-y-6">
-              <div className="bg-gradient-to-r from-white/95 to-blue-50/95 backdrop-blur-sm rounded-xl p-6 border border-blue-200/60 shadow-lg">
+              <div className="bg-gradient-to-r from-white/95 to-green-50/95 backdrop-blur-sm rounded-xl p-6 border border-green-200/60 shadow-lg">
                 <h3 className="text-2xl font-bold text-slate-800">Help & Support</h3>
                 <p className="text-slate-600">Get assistance and access resources</p>
               </div>
@@ -1594,14 +1594,14 @@ const DoctorDashboard = () => {
                 <Card className="border border-blue-200/60 shadow-lg bg-white hover:shadow-xl transition-shadow">
                   <CardHeader className="bg-gradient-to-r from-blue-100/80 to-blue-50/80 border-b border-blue-200/60">
                     <CardTitle className="flex items-center gap-2">
-                      <Building2 className="h-5 w-5 text-blue-600" />
+                      <Building2 className="h-5 w-5 text-green-600" />
                       Hospital Admin
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="p-6">
                     <p className="text-slate-600 mb-4">Contact hospital administration for technical issues</p>
                     <Button
-                      className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                      className="w-full bg-green-600 hover:bg-green-700 text-white"
                       onClick={() => toast({ title: "Message Sent!", description: "Your message has been sent to hospital administration." })}
                       disabled={isProcessing}
                     >
@@ -1613,7 +1613,7 @@ const DoctorDashboard = () => {
                 <Card className="border border-blue-200/60 shadow-lg bg-white hover:shadow-xl transition-shadow">
                   <CardHeader className="bg-gradient-to-r from-blue-100/80 to-blue-50/80 border-b border-blue-200/60">
                     <CardTitle className="flex items-center gap-2">
-                      <HelpCircle className="h-5 w-5 text-blue-600" />
+                      <HelpCircle className="h-5 w-5 text-green-600" />
                       Doctor FAQs
                     </CardTitle>
                   </CardHeader>
@@ -1875,7 +1875,7 @@ const DoctorDashboard = () => {
                       </Button>
                     </div>
                     <Button
-                      className="bg-blue-600 hover:bg-blue-700 text-white"
+                      className="bg-green-600 hover:bg-green-700 text-white"
                       onClick={() => {
                         closeModal('showScheduleModal');
                         showScheduleAppointment();
@@ -1938,7 +1938,7 @@ const DoctorDashboard = () => {
                           >
                             <div className={`text-sm font-medium mb-2 ${
                               isCurrentMonth ? 'text-slate-800' : 'text-slate-400'
-                            } ${isToday ? 'text-blue-600 font-bold' : ''}`}>
+                            } ${isToday ? 'text-green-600 font-bold' : ''}`}>
                               {date.getDate()}
                             </div>
                             

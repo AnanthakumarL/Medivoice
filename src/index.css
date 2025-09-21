@@ -219,6 +219,39 @@ All colors MUST be HSL for consistent theming.
     @apply flex items-center justify-end;
   }
 
+  /* Medical Theme Color Classes */
+  .text-medical-primary {
+    color: hsl(var(--primary));
+  }
+
+  .text-medical-secondary {
+    color: hsl(var(--secondary));
+  }
+
+  .text-medical-accent {
+    color: hsl(var(--accent-foreground));
+  }
+
+  .bg-medical-accent {
+    background-color: hsl(var(--accent));
+  }
+
+  .border-medical-accent {
+    border-color: hsl(var(--accent));
+  }
+
+  .focus-visible\:ring-medical-primary:focus-visible {
+    --tw-ring-color: hsl(var(--primary));
+  }
+
+  .hover\:text-medical-primary:hover {
+    color: hsl(var(--primary));
+  }
+
+  .hover\:text-medical-primary\/80:hover {
+    color: hsl(var(--primary) / 0.8);
+  }
+
   /* Z-Index Management */
   .z-dropdown {
     z-index: 9999;
