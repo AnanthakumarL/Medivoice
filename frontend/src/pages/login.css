@@ -1,0 +1,23 @@
+.login-delay-2s { animation-delay: 2s; }
+.login-delay-4s { animation-delay: 4s; }
+.login-delay-6s { animation-delay: 6s; }
+
+.login-grid-lines {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+.login-texture-overlay {
+  background-image: radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+    radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px, 60px 60px;
+}
+
+.login-particle-1 { animation-delay: 0s; animation-duration: 4s; }
+.login-particle-2 { animation-delay: 2s; animation-duration: 3s; }
+.login-particle-3 { animation-delay: 1s; animation-duration: 5s; }
+
+.login-hero-left-offset { margin-left: 3cm; }
+.login-hero-right-offset { margin-right: 3cm; }

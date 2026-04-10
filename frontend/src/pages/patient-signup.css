@@ -1,0 +1,57 @@
+/* Patient Signup page custom styles moved from inline to CSS */
+
+.psu-ml-3cm {
+  margin-left: 3cm;
+}
+
+.psu-mr-3cm {
+  margin-right: 3cm;
+}
+
+/* Animation delays */
+.psu-delay-0 {
+  animation-delay: 0s;
+}
+
+.psu-delay-1s {
+  animation-delay: 1s;
+}
+
+.psu-delay-2s {
+  animation-delay: 2s;
+}
+
+.psu-delay-4s {
+  animation-delay: 4s;
+}
+
+.psu-delay-6s {
+  animation-delay: 6s;
+}
+
+/* Animation durations */
+.psu-duration-3s {
+  animation-duration: 3s;
+}
+
+.psu-duration-4s {
+  animation-duration: 4s;
+}
+
+.psu-duration-5s {
+  animation-duration: 5s;
+}
+
+/* Background grid lines */
+.psu-grid-bg {
+  background-image: linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* Subtle texture overlay */
+.psu-texture-bg {
+  background-image: radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+    radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px, 60px 60px;
+}

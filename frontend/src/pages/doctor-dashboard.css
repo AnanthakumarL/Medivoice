@@ -1,0 +1,10 @@
+/* Doctor Dashboard custom styles moved from inline to CSS */
+
+/* Animation delays for bounce animation */
+.dd-delay-01s {
+  animation-delay: 0.1s;
+}
+
+.dd-delay-02s {
+  animation-delay: 0.2s;
+}

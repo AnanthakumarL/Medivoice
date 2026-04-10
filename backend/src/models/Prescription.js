@@ -1,43 +1,51 @@
 const mongoose = require('mongoose');
 
 const prescriptionSchema = new mongoose.Schema({
+  // Prescription Identification
+  prescriptionId: {
+    type: String,
+    trim: true,
+    uppercase: true
+  },
+  
+  rxNumber: {
+    type: String,
+    trim: true
+  },
+  
+  // Core References
   patient: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Patient',
-    required: [true, 'Patient is required']
+    required: [true, 'Patient reference is required'],
+    index: true
   },
-  doctor: {
+  
+  prescribedBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Doctor',
-    required: [true, 'Doctor is required']
+    required: [true, 'Prescribing doctor reference is required']
   },
+  
   appointment: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Appointment',
-    required: false
+    ref: 'Appointment'
   },
+  
   medicalRecord: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'MedicalRecord',
-    required: false
+    ref: 'MedicalRecord'
   },
-  prescriptionNumber: {
-    type: String,
-    unique: true,
-    required: true
-  },
-  medications: [{
-    name: {
+  
+  // Medication Information
+  medication: {
+    brandName: {
       type: String,
-      required: [true, 'Medication name is required'],
       trim: true
     },
     genericName: {
       type: String,
-      trim: true
-    },
-    brandName: {
-      type: String,
+      required: [true, 'Generic medication name is required'],
       trim: true
     },
     strength: {
@@ -47,500 +55,852 @@ const prescriptionSchema = new mongoose.Schema({
     },
     dosageForm: {
       type: String,
+      enum: [
+        'tablet',
+        'capsule',
+        'liquid',
+        'injection',
+        'cream',
+        'ointment',
+        'gel',
+        'patch',
+        'inhaler',
+        'drops',
+        'spray',
+        'suppository',
+        'powder',
+        'other'
+      ],
       required: [true, 'Dosage form is required'],
-      enum: ['tablet', 'capsule', 'syrup', 'injection', 'cream', 'ointment', 'drops', 'inhaler', 'spray', 'patch', 'suppository', 'powder', 'gel', 'lotion', 'solution'],
+      default: 'tablet'
+    },
+    ndc: {
+      type: String,
+      trim: true
+    },
+    manufacturer: {
+      type: String,
+      trim: true
+    }
+  },
+  
+  // Prescription Details
+  dosage: {
+    amount: {
+      type: String,
+      required: [true, 'Dosage amount is required'],
+      trim: true
+    },
+    unit: {
+      type: String,
+      enum: ['mg', 'mcg', 'g', 'ml', 'units', 'drops', 'sprays', 'patches', 'other'],
+      default: 'mg'
+    },
+    frequency: {
+      type: String,
+      required: [true, 'Dosage frequency is required'],
       trim: true
     },
     route: {
       type: String,
+      enum: [
+        'oral',
+        'sublingual',
+        'buccal',
+        'rectal',
+        'vaginal',
+        'topical',
+        'transdermal',
+        'inhalation',
+        'nasal',
+        'ophthalmic',
+        'otic',
+        'intramuscular',
+        'intravenous',
+        'subcutaneous',
+        'intradermal',
+        'other'
+      ],
       required: [true, 'Route of administration is required'],
-      enum: ['oral', 'topical', 'injection', 'inhalation', 'rectal', 'vaginal', 'sublingual', 'transdermal', 'ophthalmic', 'otic', 'nasal'],
       default: 'oral'
-    },
-    frequency: {
-      type: String,
-      required: [true, 'Frequency is required'],
-      trim: true
-    },
-    dosage: {
-      type: String,
-      required: [true, 'Dosage is required'],
-      trim: true
-    },
-    duration: {
-      type: String,
-      required: [true, 'Duration is required'],
-      trim: true
-    },
-    quantity: {
-      prescribed: {
-        type: Number,
-        required: [true, 'Prescribed quantity is required'],
-        min: [1, 'Quantity must be at least 1']
-      },
-      dispensed: {
-        type: Number,
-        default: 0
-      },
-      unit: {
-        type: String,
-        required: [true, 'Quantity unit is required'],
-        enum: ['tablets', 'capsules', 'ml', 'mg', 'g', 'units', 'bottles', 'tubes', 'vials', 'sachets', 'pieces']
-      }
     },
     instructions: {
       type: String,
-      required: [true, 'Instructions are required'],
+      required: [true, 'Prescription instructions are required'],
       trim: true,
-      maxlength: [500, 'Instructions cannot exceed 500 characters']
+      maxlength: 1000
     },
-    specialInstructions: {
+    duration: {
       type: String,
-      trim: true,
-      maxlength: [500, 'Special instructions cannot exceed 500 characters']
+      trim: true
+    }
+  },
+  
+  // Quantity and Refills
+  quantity: {
+    prescribed: {
+      type: Number,
+      required: [true, 'Prescribed quantity is required'],
+      min: 1
     },
-    indication: {
+    dispensed: {
+      type: Number,
+      default: 0
+    },
+    unit: {
       type: String,
-      trim: true,
-      maxlength: [200, 'Indication cannot exceed 200 characters']
+      enum: ['tablets', 'capsules', 'ml', 'grams', 'patches', 'inhalers', 'bottles', 'vials', 'tubes', 'other'],
+      default: 'tablets'
+    }
+  },
+  
+  refills: {
+    authorized: {
+      type: Number,
+      default: 0,
+      min: 0,
+      max: 11
     },
-    contraindications: [String],
-    sideEffects: [String],
-    interactions: [String],
-    precautions: [String],
-    isGenericAllowed: {
-      type: Boolean,
-      default: true
+    remaining: {
+      type: Number,
+      default: 0
     },
-    isControlledSubstance: {
+    used: {
+      type: Number,
+      default: 0
+    }
+  },
+  
+  // Dates
+  prescribedDate: {
+    type: Date,
+    required: [true, 'Prescribed date is required'],
+    default: Date.now,
+    index: true
+  },
+  
+  effectiveDate: {
+    type: Date,
+    default: Date.now
+  },
+  
+  expirationDate: {
+    type: Date,
+    required: [true, 'Expiration date is required']
+  },
+  
+  // Clinical Information
+  indication: {
+    diagnosis: {
+      type: String,
+      trim: true
+    },
+    icd10Code: {
+      type: String,
+      trim: true
+    },
+    purpose: {
+      type: String,
+      required: [true, 'Purpose of prescription is required'],
+      trim: true
+    }
+  },
+  
+  contraindications: [{
+    condition: {
+      type: String,
+      trim: true
+    },
+    severity: {
+      type: String,
+      enum: ['mild', 'moderate', 'severe', 'absolute'],
+      default: 'moderate'
+    },
+    notes: {
+      type: String,
+      trim: true
+    }
+  }],
+  
+  allergies: [{
+    allergen: {
+      type: String,
+      trim: true
+    },
+    reaction: {
+      type: String,
+      trim: true
+    },
+    severity: {
+      type: String,
+      enum: ['mild', 'moderate', 'severe', 'life-threatening'],
+      default: 'mild'
+    }
+  }],
+  
+  drugInteractions: [{
+    medication: {
+      type: String,
+      trim: true
+    },
+    interactionType: {
+      type: String,
+      enum: ['minor', 'moderate', 'major', 'contraindicated'],
+      default: 'moderate'
+    },
+    description: {
+      type: String,
+      trim: true
+    },
+    management: {
+      type: String,
+      trim: true
+    }
+  }],
+  
+  // Pharmacy Information
+  pharmacy: {
+    name: {
+      type: String,
+      trim: true
+    },
+    address: {
+      street: String,
+      city: String,
+      state: String,
+      zipCode: String,
+      country: { type: String, default: 'USA' }
+    },
+    phone: {
+      type: String,
+      trim: true
+    },
+    npi: {
+      type: String,
+      trim: true
+    },
+    licenseNumber: {
+      type: String,
+      trim: true
+    }
+  },
+  
+  // Dispensing Information
+  dispensing: {
+    dispensedDate: Date,
+    dispensedBy: {
+      pharmacist: String,
+      pharmacyTechnician: String
+    },
+    lotNumber: {
+      type: String,
+      trim: true
+    },
+    manufacturerExpiration: Date,
+    counselingProvided: {
       type: Boolean,
       default: false
     },
-    scheduleClass: {
+    counselingNotes: {
       type: String,
-      enum: ['I', 'II', 'III', 'IV', 'V'],
-      required: function() {
-        return this.isControlledSubstance;
-      }
+      trim: true
     },
-    refills: {
-      authorized: {
-        type: Number,
-        default: 0,
-        min: [0, 'Refills cannot be negative'],
-        max: [5, 'Maximum 5 refills allowed']
+    substitution: {
+      allowed: {
+        type: Boolean,
+        default: true
       },
-      remaining: {
-        type: Number,
-        default: 0
+      occurred: {
+        type: Boolean,
+        default: false
+      },
+      substituteProduct: {
+        type: String,
+        trim: true
+      },
+      reason: {
+        type: String,
+        trim: true
       }
+    }
+  },
+  
+  // Status and Tracking
+  status: {
+    type: String,
+    enum: [
+      'pending',
+      'sent-to-pharmacy',
+      'ready-for-pickup',
+      'dispensed',
+      'partially-filled',
+      'cancelled',
+      'expired',
+      'on-hold',
+      'denied'
+    ],
+    default: 'pending',
+    index: true
+  },
+  
+  statusHistory: [{
+    status: {
+      type: String,
+      enum: [
+        'pending',
+        'sent-to-pharmacy',
+        'ready-for-pickup',
+        'dispensed',
+        'partially-filled',
+        'cancelled',
+        'expired',
+        'on-hold',
+        'denied'
+      ],
+      required: true
     },
-    startDate: {
+    timestamp: {
       type: Date,
       default: Date.now
     },
-    endDate: Date,
-    status: {
-      type: String,
-      enum: ['active', 'completed', 'discontinued', 'on-hold'],
-      default: 'active'
-    },
-    discontinuationReason: {
+    updatedBy: {
       type: String,
       trim: true
     },
-    allergyChecked: {
+    notes: {
+      type: String,
+      trim: true
+    }
+  }],
+  
+  // Electronic Prescription Information
+  ePrescription: {
+    isElectronic: {
       type: Boolean,
       default: false
     },
-    interactionChecked: {
-      type: Boolean,
-      default: false
-    }
-  }],
-  totalCost: {
-    type: Number,
-    min: [0, 'Total cost cannot be negative']
-  },
-  diagnosis: [{
-    condition: {
+    transmissionId: {
       type: String,
-      required: true,
       trim: true
     },
-    icdCode: {
-      type: String,
-      trim: true,
-      uppercase: true
-    }
-  }],
-  prescribedFor: {
-    type: String,
-    required: [true, 'Prescribed for condition is required'],
-    trim: true,
-    maxlength: [200, 'Prescribed for cannot exceed 200 characters']
-  },
-  pharmacy: {
-    name: String,
-    address: String,
-    phone: String,
-    email: String,
-    licenseNumber: String
-  },
-  isElectronicPrescription: {
-    type: Boolean,
-    default: true
-  },
-  prescriptionType: {
-    type: String,
-    enum: ['new', 'refill', 'renewal', 'transfer'],
-    default: 'new'
-  },
-  urgency: {
-    type: String,
-    enum: ['routine', 'urgent', 'stat'],
-    default: 'routine'
-  },
-  status: {
-    type: String,
-    enum: ['draft', 'sent', 'dispensed', 'completed', 'cancelled', 'expired'],
-    default: 'draft'
-  },
-  dispensingHistory: [{
-    pharmacist: {
-      name: String,
-      licenseNumber: String
+    transmissionDate: Date,
+    receivedByPharmacy: {
+      type: Boolean,
+      default: false
     },
-    pharmacy: {
-      name: String,
-      address: String,
-      phone: String
+    receivedDate: Date,
+    errorMessages: [{
+      code: String,
+      message: String,
+      timestamp: { type: Date, default: Date.now }
+    }]
+  },
+  
+  // Insurance and Prior Authorization
+  insurance: {
+    provider: {
+      type: String,
+      trim: true
+    },
+    memberId: {
+      type: String,
+      trim: true
+    },
+    groupNumber: {
+      type: String,
+      trim: true
+    },
+    copay: {
+      type: Number,
+      min: 0
+    },
+    coverage: {
+      isApproved: {
+        type: Boolean,
+        default: false
+      },
+      coveragePercentage: {
+        type: Number,
+        min: 0,
+        max: 100
+      },
+      maxQuantity: Number,
+      restrictions: [{
+        type: String,
+        trim: true
+      }]
+    },
+    priorAuthorization: {
+      required: {
+        type: Boolean,
+        default: false
+      },
+      authNumber: {
+        type: String,
+        trim: true
+      },
+      expirationDate: Date,
+      status: {
+        type: String,
+        enum: ['pending', 'approved', 'denied', 'expired'],
+        default: 'pending'
+      },
+      requestDate: Date,
+      approvalDate: Date
+    }
+  },
+  
+  // Cost Information
+  cost: {
+    prescriptionCost: {
+      type: Number,
+      min: 0
+    },
+    insurancePaid: {
+      type: Number,
+      min: 0
+    },
+    patientPaid: {
+      type: Number,
+      min: 0
+    },
+    copay: {
+      type: Number,
+      min: 0
+    },
+    deductible: {
+      type: Number,
+      min: 0
+    }
+  },
+  
+  // Patient Compliance and Monitoring
+  compliance: {
+    adherenceRate: {
+      type: Number,
+      min: 0,
+      max: 100
+    },
+    lastTaken: Date,
+    missedDoses: {
+      type: Number,
+      default: 0
+    },
+    sideEffectsReported: [{
+      effect: {
+        type: String,
+        trim: true
+      },
+      severity: {
+        type: String,
+        enum: ['mild', 'moderate', 'severe'],
+        default: 'mild'
+      },
+      reportedDate: {
+        type: Date,
+        default: Date.now
+      },
+      action: {
+        type: String,
+        trim: true
+      }
+    }],
+    effectivenessRating: {
+      type: Number,
+      min: 1,
+      max: 10
+    },
+    patientNotes: {
+      type: String,
+      trim: true
+    }
+  },
+  
+  // Refill History
+  refillHistory: [{
+    refillNumber: {
+      type: Number,
+      required: true
     },
     dispensedDate: {
       type: Date,
-      default: Date.now
+      required: true
     },
-    dispensedQuantity: Number,
-    dispensedMedications: [{
-      medicationIndex: Number,
-      actualMedication: String,
-      actualStrength: String,
-      actualQuantity: Number,
-      lotNumber: String,
-      expiryDate: Date,
-      manufacturer: String
-    }],
-    cost: Number,
-    insuranceCovered: Boolean,
-    copay: Number,
-    notes: String
+    quantityDispensed: {
+      type: Number,
+      required: true
+    },
+    daysSupply: {
+      type: Number,
+      required: true
+    },
+    pharmacy: {
+      type: String,
+      trim: true
+    },
+    cost: {
+      type: Number,
+      min: 0
+    },
+    notes: {
+      type: String,
+      trim: true
+    }
   }],
-  validUntil: {
-    type: Date,
-    required: true
-  },
-  isValid: {
-    type: Boolean,
-    default: true
-  },
-  cancellationReason: String,
-  digitalSignature: {
-    doctorId: String,
-    timestamp: Date,
-    hash: String
-  },
-  patientConsent: {
-    obtained: {
+  
+  // Clinical Monitoring
+  monitoring: {
+    labMonitoringRequired: {
       type: Boolean,
       default: false
     },
-    obtainedAt: Date,
-    method: {
+    labTests: [{
+      testName: String,
+      frequency: String,
+      lastCompleted: Date,
+      nextDue: Date,
+      results: String
+    }],
+    vitalSignsMonitoring: {
+      required: {
+        type: Boolean,
+        default: false
+      },
+      frequency: String,
+      parameters: [String]
+    },
+    followUpRequired: {
+      type: Boolean,
+      default: false
+    },
+    followUpDate: Date,
+    monitoringNotes: {
       type: String,
-      enum: ['verbal', 'written', 'electronic']
+      trim: true
     }
   },
-  followUpRequired: {
-    type: Boolean,
-    default: false
+  
+  // Discontinuation Information
+  discontinuation: {
+    isDiscontinued: {
+      type: Boolean,
+      default: false
+    },
+    discontinuedDate: Date,
+    discontinuedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Doctor'
+    },
+    reason: {
+      type: String,
+      enum: [
+        'treatment-completed',
+        'ineffective',
+        'side-effects',
+        'patient-request',
+        'drug-interaction',
+        'contraindication',
+        'cost',
+        'other'
+      ]
+    },
+    notes: {
+      type: String,
+      trim: true
+    },
+    taperSchedule: {
+      type: String,
+      trim: true
+    }
   },
-  followUpDate: Date,
-  followUpInstructions: String,
+  
+  // Digital Signature and Verification
+  digitalSignature: {
+    isSigned: {
+      type: Boolean,
+      default: false
+    },
+    signedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Doctor'
+    },
+    signedDate: Date,
+    signatureHash: {
+      type: String,
+      trim: true
+    },
+    verification: {
+      isVerified: {
+        type: Boolean,
+        default: false
+      },
+      verifiedBy: String,
+      verifiedDate: Date
+    }
+  },
+  
+  // Metadata
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  
+  lastModifiedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  
   notes: {
-    doctor: String,
-    pharmacist: String,
-    patient: String
+    type: String,
+    trim: true
   },
-  printedCopies: {
-    type: Number,
-    default: 0
-  },
-  lastPrintedAt: Date
+  
+  isActive: {
+    type: Boolean,
+    default: true
+  }
 }, {
   timestamps: true,
   toJSON: { virtuals: true },
   toObject: { virtuals: true }
 });
 
-// Pre-save middleware to generate prescription number
-prescriptionSchema.pre('save', async function(next) {
-  if (!this.prescriptionNumber) {
-    const count = await this.constructor.countDocuments();
-    const date = new Date();
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    
-    this.prescriptionNumber = `RX${year}${month}${day}${String(count + 1).padStart(4, '0')}`;
-  }
+// Indexes
+prescriptionSchema.index({ patient: 1, prescribedDate: -1 });
+prescriptionSchema.index({ prescribedBy: 1, prescribedDate: -1 });
+prescriptionSchema.index({ prescriptionId: 1 }, { unique: true, sparse: true });
+prescriptionSchema.index({ rxNumber: 1 }, { unique: true, sparse: true });
+prescriptionSchema.index({ expirationDate: 1 });
+prescriptionSchema.index({ 'medication.genericName': 1 });
 
-  // Set default validity (30 days from creation)
-  if (!this.validUntil) {
-    this.validUntil = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
-  }
-
-  // Initialize remaining refills
-  this.medications.forEach(med => {
-    if (med.refills.remaining === undefined) {
-      med.refills.remaining = med.refills.authorized;
-    }
-  });
-
-  next();
-});
-
-// Virtual for prescription age
-prescriptionSchema.virtual('prescriptionAge').get(function() {
-  const now = new Date();
-  const created = this.createdAt;
-  const diffTime = Math.abs(now - created);
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  
-  if (diffDays === 1) return '1 day ago';
-  if (diffDays < 30) return `${diffDays} days ago`;
-  if (diffDays < 365) return `${Math.floor(diffDays / 30)} months ago`;
-  return `${Math.floor(diffDays / 365)} years ago`;
-});
-
-// Virtual for validity status
+// Virtual properties
 prescriptionSchema.virtual('isExpired').get(function() {
-  return new Date() > this.validUntil;
+  return this.expirationDate < new Date();
 });
 
-// Virtual for days until expiry
-prescriptionSchema.virtual('daysUntilExpiry').get(function() {
+prescriptionSchema.virtual('daysUntilExpiration').get(function() {
   const now = new Date();
-  const diffTime = this.validUntil - now;
+  const expiration = new Date(this.expirationDate);
+  const diffTime = expiration - now;
   return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 });
 
-// Virtual for total medications count
-prescriptionSchema.virtual('medicationCount').get(function() {
-  return this.medications.length;
+prescriptionSchema.virtual('isRefillable').get(function() {
+  return this.refills.remaining > 0 && !this.isExpired && this.status === 'dispensed';
 });
 
-// Indexes
-prescriptionSchema.index({ patient: 1 });
-prescriptionSchema.index({ doctor: 1 });
-prescriptionSchema.index({ appointment: 1 });
-prescriptionSchema.index({ prescriptionNumber: 1 }, { unique: true });
-prescriptionSchema.index({ status: 1 });
-prescriptionSchema.index({ createdAt: -1 });
-prescriptionSchema.index({ validUntil: 1 });
-prescriptionSchema.index({ isValid: 1 });
-
-// Compound indexes
-prescriptionSchema.index({ patient: 1, createdAt: -1 });
-prescriptionSchema.index({ patient: 1, status: 1 });
-prescriptionSchema.index({ doctor: 1, createdAt: -1 });
-prescriptionSchema.index({ patient: 1, validUntil: 1 });
-prescriptionSchema.index({ status: 1, validUntil: 1 });
-
-// Text index for search
-prescriptionSchema.index({
-  prescriptionNumber: 'text',
-  'medications.name': 'text',
-  'medications.genericName': 'text',
-  'medications.brandName': 'text',
-  prescribedFor: 'text'
+prescriptionSchema.virtual('totalQuantityDispensed').get(function() {
+  return this.refillHistory.reduce((total, refill) => total + refill.quantityDispensed, 0);
 });
 
-// Static method to find active prescriptions
-prescriptionSchema.statics.findActivePrescriptions = function(patientId) {
-  return this.find({
-    patient: patientId,
-    status: { $in: ['sent', 'dispensed'] },
-    isValid: true,
-    validUntil: { $gt: new Date() }
-  })
-  .populate('doctor', 'user specialization')
-  .populate({
-    path: 'doctor',
-    populate: {
-      path: 'user',
-      select: 'firstName lastName'
-    }
-  })
-  .sort({ createdAt: -1 });
-};
+prescriptionSchema.virtual('adherenceStatus').get(function() {
+  if (!this.compliance.adherenceRate) return 'unknown';
+  if (this.compliance.adherenceRate >= 80) return 'good';
+  if (this.compliance.adherenceRate >= 60) return 'moderate';
+  return 'poor';
+});
 
-// Static method to find expiring prescriptions
-prescriptionSchema.statics.findExpiringPrescriptions = function(days = 7) {
-  const expiryDate = new Date();
-  expiryDate.setDate(expiryDate.getDate() + days);
-
-  return this.find({
-    status: { $in: ['sent', 'dispensed'] },
-    isValid: true,
-    validUntil: { $lte: expiryDate, $gt: new Date() }
-  })
-  .populate('patient', 'patientId user')
-  .populate('doctor', 'user specialization')
-  .sort({ validUntil: 1 });
-};
-
-// Static method to search prescriptions
-prescriptionSchema.statics.searchPrescriptions = function(searchTerm, options = {}) {
-  let query = {
-    $text: { $search: searchTerm }
-  };
-
-  if (options.patientId) {
-    query.patient = options.patientId;
+// Pre-save middleware
+prescriptionSchema.pre('save', async function(next) {
+  if (!this.prescriptionId) {
+    const count = await this.constructor.countDocuments();
+    this.prescriptionId = `RX${String(count + 1).padStart(8, '0')}`;
   }
-
-  if (options.doctorId) {
-    query.doctor = options.doctorId;
+  
+  if (!this.rxNumber) {
+    const timestamp = Date.now().toString();
+    this.rxNumber = `RX${timestamp.slice(-8)}`;
   }
-
-  if (options.status) {
-    query.status = options.status;
+  
+  // Set default expiration date if not provided (1 year from prescribed date)
+  if (!this.expirationDate) {
+    const expDate = new Date(this.prescribedDate);
+    expDate.setFullYear(expDate.getFullYear() + 1);
+    this.expirationDate = expDate;
   }
-
-  if (options.validOnly) {
-    query.isValid = true;
-    query.validUntil = { $gt: new Date() };
+  
+  // Initialize remaining refills
+  if (this.isNew) {
+    this.refills.remaining = this.refills.authorized;
   }
+  
+  next();
+});
 
-  return this.find(query, { score: { $meta: 'textScore' } })
-    .sort({ score: { $meta: 'textScore' }, createdAt: -1 })
-    .populate('patient', 'patientId user')
-    .populate('doctor', 'user specialization');
-};
+// Pre-save middleware to update status history
+prescriptionSchema.pre('save', function(next) {
+  if (this.isModified('status') && !this.isNew) {
+    this.statusHistory.push({
+      status: this.status,
+      timestamp: new Date(),
+      updatedBy: this.lastModifiedBy ? this.lastModifiedBy.toString() : 'system'
+    });
+  }
+  next();
+});
 
-// Instance method to add medication
-prescriptionSchema.methods.addMedication = function(medicationData) {
-  this.medications.push(medicationData);
-  return this.save();
-};
-
-// Instance method to send prescription
-prescriptionSchema.methods.sendToPharmacy = function(pharmacyData) {
-  this.status = 'sent';
-  this.pharmacy = pharmacyData;
-  return this.save();
-};
-
-// Instance method to dispense medication
-prescriptionSchema.methods.dispenseMedication = function(dispensingData) {
+// Instance methods
+prescriptionSchema.methods.dispense = function(dispensingInfo) {
   this.status = 'dispensed';
-  this.dispensingHistory.push(dispensingData);
+  this.dispensing = {
+    ...this.dispensing,
+    ...dispensingInfo,
+    dispensedDate: new Date()
+  };
+  this.quantity.dispensed = dispensingInfo.quantityDispensed || this.quantity.prescribed;
   
-  // Update dispensed quantities
-  dispensingData.dispensedMedications.forEach(dispMed => {
-    if (this.medications[dispMed.medicationIndex]) {
-      this.medications[dispMed.medicationIndex].quantity.dispensed += dispMed.actualQuantity;
-    }
+  // Add to refill history
+  this.refillHistory.push({
+    refillNumber: this.refillHistory.length + 1,
+    dispensedDate: new Date(),
+    quantityDispensed: this.quantity.dispensed,
+    daysSupply: dispensingInfo.daysSupply || 30,
+    pharmacy: this.pharmacy.name,
+    cost: dispensingInfo.cost
   });
-
-  return this.save();
-};
-
-// Instance method to cancel prescription
-prescriptionSchema.methods.cancel = function(reason) {
-  this.status = 'cancelled';
-  this.isValid = false;
-  this.cancellationReason = reason;
-  return this.save();
-};
-
-// Instance method to refill medication
-prescriptionSchema.methods.refillMedication = function(medicationIndex, quantity) {
-  const medication = this.medications[medicationIndex];
   
-  if (!medication) {
-    throw new Error('Medication not found');
-  }
+  return this.save();
+};
 
-  if (medication.refills.remaining <= 0) {
+prescriptionSchema.methods.refill = function(refillInfo) {
+  if (this.refills.remaining <= 0) {
     throw new Error('No refills remaining');
   }
-
+  
   if (this.isExpired) {
     throw new Error('Prescription has expired');
   }
-
-  medication.refills.remaining -= 1;
-  medication.quantity.dispensed += quantity;
-
+  
+  this.refills.remaining -= 1;
+  this.refills.used += 1;
+  
+  this.refillHistory.push({
+    refillNumber: this.refillHistory.length + 1,
+    dispensedDate: new Date(),
+    quantityDispensed: refillInfo.quantityDispensed || this.quantity.prescribed,
+    daysSupply: refillInfo.daysSupply || 30,
+    pharmacy: refillInfo.pharmacy || this.pharmacy.name,
+    cost: refillInfo.cost,
+    notes: refillInfo.notes
+  });
+  
   return this.save();
 };
 
-// Instance method to check drug interactions
-prescriptionSchema.methods.checkInteractions = function() {
-  const medications = this.medications.map(med => med.name.toLowerCase());
-  const interactions = [];
-
-  // This is a simplified interaction check
-  // In a real system, this would integrate with a drug interaction database
-  for (let i = 0; i < medications.length; i++) {
-    for (let j = i + 1; j < medications.length; j++) {
-      // Example: Check for common interactions
-      if ((medications[i].includes('warfarin') && medications[j].includes('aspirin')) ||
-          (medications[i].includes('aspirin') && medications[j].includes('warfarin'))) {
-        interactions.push({
-          medication1: this.medications[i].name,
-          medication2: this.medications[j].name,
-          severity: 'major',
-          description: 'Increased risk of bleeding'
-        });
-      }
-    }
-  }
-
-  return interactions;
+prescriptionSchema.methods.cancel = function(reason, cancelledBy) {
+  this.status = 'cancelled';
+  this.lastModifiedBy = cancelledBy;
+  this.statusHistory.push({
+    status: 'cancelled',
+    timestamp: new Date(),
+    updatedBy: cancelledBy.toString(),
+    notes: reason
+  });
+  return this.save();
 };
 
-// Instance method to validate prescription
-prescriptionSchema.methods.validatePrescription = function() {
-  const errors = [];
-
-  // Check if expired
-  if (this.isExpired) {
-    errors.push('Prescription has expired');
-  }
-
-  // Check if valid
-  if (!this.isValid) {
-    errors.push('Prescription is not valid');
-  }
-
-  // Check if cancelled
-  if (this.status === 'cancelled') {
-    errors.push('Prescription has been cancelled');
-  }
-
-  // Check if medications have refills
-  this.medications.forEach((med, index) => {
-    if (med.refills.remaining <= 0 && med.status === 'active') {
-      errors.push(`No refills remaining for ${med.name}`);
-    }
-  });
-
-  return {
-    isValid: errors.length === 0,
-    errors: errors
+prescriptionSchema.methods.discontinue = function(discontinuationInfo, discontinuedBy) {
+  this.discontinuation = {
+    isDiscontinued: true,
+    discontinuedDate: new Date(),
+    discontinuedBy: discontinuedBy,
+    ...discontinuationInfo
   };
+  this.status = 'cancelled';
+  this.isActive = false;
+  return this.save();
+};
+
+prescriptionSchema.methods.reportSideEffect = function(sideEffectData) {
+  this.compliance.sideEffectsReported.push({
+    ...sideEffectData,
+    reportedDate: new Date()
+  });
+  return this.save();
+};
+
+prescriptionSchema.methods.updateCompliance = function(complianceData) {
+  this.compliance = { ...this.compliance, ...complianceData };
+  return this.save();
+};
+
+prescriptionSchema.methods.sign = function(doctorId, signatureHash) {
+  this.digitalSignature = {
+    isSigned: true,
+    signedBy: doctorId,
+    signedDate: new Date(),
+    signatureHash: signatureHash
+  };
+  return this.save();
+};
+
+// Static methods
+prescriptionSchema.statics.findByPrescriptionId = function(prescriptionId) {
+  return this.findOne({ prescriptionId: prescriptionId.toUpperCase() })
+    .populate('patient prescribedBy appointment');
+};
+
+prescriptionSchema.statics.findByRxNumber = function(rxNumber) {
+  return this.findOne({ rxNumber: rxNumber })
+    .populate('patient prescribedBy');
+};
+
+prescriptionSchema.statics.findActiveByPatient = function(patientId) {
+  return this.find({
+    patient: patientId,
+    isActive: true,
+    status: { $nin: ['cancelled', 'expired'] },
+    expirationDate: { $gte: new Date() }
+  }).populate('prescribedBy');
+};
+
+prescriptionSchema.statics.findByDoctor = function(doctorId, startDate, endDate) {
+  const query = { prescribedBy: doctorId };
+  if (startDate && endDate) {
+    query.prescribedDate = { $gte: startDate, $lte: endDate };
+  }
+  return this.find(query)
+    .sort({ prescribedDate: -1 })
+    .populate('patient');
+};
+
+prescriptionSchema.statics.findExpiringSoon = function(days = 30) {
+  const futureDate = new Date();
+  futureDate.setDate(futureDate.getDate() + days);
+  
+  return this.find({
+    expirationDate: { $lte: futureDate, $gte: new Date() },
+    status: { $nin: ['cancelled', 'expired'] },
+    isActive: true
+  }).populate('patient prescribedBy');
+};
+
+prescriptionSchema.statics.findByMedication = function(medicationName) {
+  return this.find({
+    $or: [
+      { 'medication.brandName': new RegExp(medicationName, 'i') },
+      { 'medication.genericName': new RegExp(medicationName, 'i') }
+    ],
+    isActive: true
+  }).populate('patient prescribedBy');
+};
+
+prescriptionSchema.statics.getPrescriptionStats = function(doctorId, startDate, endDate) {
+  return this.aggregate([
+    {
+      $match: {
+        prescribedBy: mongoose.Types.ObjectId(doctorId),
+        prescribedDate: { $gte: startDate, $lte: endDate }
+      }
+    },
+    {
+      $group: {
+        _id: '$status',
+        count: { $sum: 1 }
+      }
+    }
+  ]);
 };
 
 module.exports = mongoose.model('Prescription', prescriptionSchema);

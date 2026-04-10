@@ -1,330 +1,428 @@
 const jwt = require('jsonwebtoken');
-const User = require('../models/User');
-const { promisify } = require('util');
-
-// Environment variables validation
-const JWT_SECRET = process.env.JWT_SECRET;
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d';
-
-if (!JWT_SECRET) {
-  throw new Error('JWT_SECRET is required in environment variables');
-}
+const User = require('../models/User-enhanced');
+const logger = require('../config/logger');
 
 /**
- * Generate JWT token for user
+ * Authentication middleware to verify JWT tokens and authenticate users
  */
-const generateToken = (userId) => {
-  return jwt.sign({ id: userId }, JWT_SECRET, {
-    expiresIn: JWT_EXPIRES_IN
-  });
-};
-
-/**
- * Verify JWT token
- */
-const verifyToken = async (token) => {
+const authenticate = async (req, res, next) => {
   try {
-    const decoded = await promisify(jwt.verify)(token, JWT_SECRET);
-    return decoded;
-  } catch (error) {
-    if (error.name === 'TokenExpiredError') {
-      throw new Error('Token has expired');
-    } else if (error.name === 'JsonWebTokenError') {
-      throw new Error('Invalid token');
-    }
-    throw new Error('Token verification failed');
-  }
-};
-
-/**
- * Authentication middleware
- * Verifies JWT token and attaches user to request
- */
-const auth = async (req, res, next) => {
-  try {
-    // Get token from header
-    let token;
-    const authHeader = req.headers.authorization;
+    // Get token from Authorization header
+    const authHeader = req.header('Authorization');
     
-    if (authHeader && authHeader.startsWith('Bearer ')) {
-      token = authHeader.substring(7);
-    } else if (req.cookies && req.cookies.jwt) {
-      token = req.cookies.jwt;
+    if (!authHeader) {
+      return res.status(401).json({
+        success: false,
+        message: 'Access denied. No token provided.',
+        error: 'AUTHENTICATION_REQUIRED'
+      });
     }
+
+    // Extract token from "Bearer <token>" format
+    const token = authHeader.startsWith('Bearer ') 
+      ? authHeader.slice(7) 
+      : authHeader;
 
     if (!token) {
       return res.status(401).json({
         success: false,
-        message: 'Access denied. No token provided.'
+        message: 'Access denied. Invalid token format.',
+        error: 'INVALID_TOKEN_FORMAT'
       });
     }
 
-    // Verify token
-    const decoded = await verifyToken(token);
-    
-    // Get user from database
-    const user = await User.findById(decoded.id).select('-password');
-    
+    // Verify the token
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (jwtError) {
+      if (jwtError.name === 'TokenExpiredError') {
+        return res.status(401).json({
+          success: false,
+          message: 'Token has expired. Please login again.',
+          error: 'TOKEN_EXPIRED'
+        });
+      } else if (jwtError.name === 'JsonWebTokenError') {
+        return res.status(401).json({
+          success: false,
+          message: 'Invalid token. Please login again.',
+          error: 'INVALID_TOKEN'
+        });
+      } else {
+        throw jwtError;
+      }
+    }
+
+    // Find user by ID from token
+    const user = await User.findById(decoded.userId)
+      .select('-password -refreshTokens')
+      .lean();
+
     if (!user) {
       return res.status(401).json({
         success: false,
-        message: 'Invalid token. User not found.'
+        message: 'User not found. Please login again.',
+        error: 'USER_NOT_FOUND'
       });
     }
 
-    // Check if user is active
+    // Check if user account is active
     if (!user.isActive) {
       return res.status(401).json({
         success: false,
-        message: 'Account has been deactivated.'
+        message: 'Your account has been deactivated. Please contact support.',
+        error: 'ACCOUNT_DEACTIVATED'
       });
     }
 
-    // Check if account is locked
-    if (user.lockUntil && user.lockUntil > Date.now()) {
-      return res.status(423).json({
+    // Check if user account is locked
+    if (user.accountLock && user.accountLock.isLocked) {
+      const unlockTime = new Date(user.accountLock.lockedUntil);
+      if (unlockTime > new Date()) {
+        return res.status(423).json({
+          success: false,
+          message: `Account is locked until ${unlockTime.toISOString()}. Please try again later.`,
+          error: 'ACCOUNT_LOCKED',
+          lockedUntil: unlockTime
+        });
+      }
+    }
+
+    // Check if email is verified (if email verification is required)
+    if (process.env.REQUIRE_EMAIL_VERIFICATION === 'true' && !user.emailVerification.isVerified) {
+      return res.status(403).json({
         success: false,
-        message: 'Account is temporarily locked. Please try again later.'
+        message: 'Please verify your email address before accessing this resource.',
+        error: 'EMAIL_NOT_VERIFIED'
       });
     }
 
-    // Attach user to request
+    // Add user to request object
     req.user = user;
+    req.userId = user._id.toString();
+
+    // Log successful authentication
+    logger.info('User authenticated successfully', {
+      userId: user._id,
+      email: user.email,
+      role: user.role,
+      endpoint: req.originalUrl,
+      method: req.method,
+      ip: req.ip,
+      userAgent: req.get('User-Agent')
+    });
+
     next();
-
   } catch (error) {
-    console.error('Authentication error:', error);
-    
-    if (error.message.includes('expired')) {
-      return res.status(401).json({
-        success: false,
-        message: 'Token has expired. Please login again.'
-      });
-    }
+    logger.error('Authentication error:', {
+      error: error.message,
+      stack: error.stack,
+      endpoint: req.originalUrl,
+      method: req.method,
+      ip: req.ip
+    });
 
-    return res.status(401).json({
+    res.status(500).json({
       success: false,
-      message: 'Invalid token. Authentication failed.'
+      message: 'Internal server error during authentication.',
+      error: 'AUTHENTICATION_ERROR'
     });
   }
 };
 
-// Legacy support - alias for auth
-const authenticate = auth;
+/**
+ * Optional authentication middleware - authenticates if token is present but doesn't require it
+ */
+const optionalAuthenticate = async (req, res, next) => {
+  try {
+    const authHeader = req.header('Authorization');
+    
+    if (!authHeader) {
+      // No token provided, continue without authentication
+      return next();
+    }
+
+    const token = authHeader.startsWith('Bearer ') 
+      ? authHeader.slice(7) 
+      : authHeader;
+
+    if (!token) {
+      // Invalid token format, continue without authentication
+      return next();
+    }
+
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const user = await User.findById(decoded.userId)
+        .select('-password -refreshTokens')
+        .lean();
+
+      if (user && user.isActive) {
+        req.user = user;
+        req.userId = user._id.toString();
+      }
+    } catch (jwtError) {
+      // Token verification failed, continue without authentication
+      logger.warn('Optional authentication failed:', {
+        error: jwtError.message,
+        endpoint: req.originalUrl,
+        ip: req.ip
+      });
+    }
+
+    next();
+  } catch (error) {
+    logger.error('Optional authentication error:', {
+      error: error.message,
+      stack: error.stack,
+      endpoint: req.originalUrl,
+      ip: req.ip
+    });
+
+    // Continue without authentication on error
+    next();
+  }
+};
 
 /**
- * Authorization middleware - check user roles
+ * Authorization middleware to check user roles
  */
-const authorize = (...roles) => {
+const authorize = (...allowedRoles) => {
   return (req, res, next) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({
+          success: false,
+          message: 'Authentication required.',
+          error: 'AUTHENTICATION_REQUIRED'
+        });
+      }
+
+      if (!allowedRoles.includes(req.user.role)) {
+        logger.warn('Authorization failed - insufficient permissions:', {
+          userId: req.user._id,
+          userRole: req.user.role,
+          requiredRoles: allowedRoles,
+          endpoint: req.originalUrl,
+          method: req.method,
+          ip: req.ip
+        });
+
+        return res.status(403).json({
+          success: false,
+          message: `Access denied. Required role: ${allowedRoles.join(' or ')}.`,
+          error: 'INSUFFICIENT_PERMISSIONS',
+          userRole: req.user.role,
+          requiredRoles: allowedRoles
+        });
+      }
+
+      next();
+    } catch (error) {
+      logger.error('Authorization error:', {
+        error: error.message,
+        stack: error.stack,
+        userId: req.user?._id,
+        endpoint: req.originalUrl,
+        ip: req.ip
+      });
+
+      res.status(500).json({
+        success: false,
+        message: 'Internal server error during authorization.',
+        error: 'AUTHORIZATION_ERROR'
+      });
+    }
+  };
+};
+
+/**
+ * Resource ownership middleware - checks if user owns the resource or has admin privileges
+ */
+const checkResourceOwnership = (resourceIdParam = 'id', userIdField = 'user') => {
+  return async (req, res, next) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({
+          success: false,
+          message: 'Authentication required.',
+          error: 'AUTHENTICATION_REQUIRED'
+        });
+      }
+
+      // Admin and super admin can access any resource
+      if (['admin', 'super_admin'].includes(req.user.role)) {
+        return next();
+      }
+
+      const resourceId = req.params[resourceIdParam];
+      
+      if (!resourceId) {
+        return res.status(400).json({
+          success: false,
+          message: `Resource ID parameter '${resourceIdParam}' is required.`,
+          error: 'MISSING_RESOURCE_ID'
+        });
+      }
+
+      // For user resources, check if the user owns the resource
+      if (userIdField === 'user' && resourceId === req.userId) {
+        return next();
+      }
+
+      // For other resources, you might need to query the database
+      // This is a basic implementation - extend as needed for specific resources
+      req.resourceId = resourceId;
+      next();
+    } catch (error) {
+      logger.error('Resource ownership check error:', {
+        error: error.message,
+        stack: error.stack,
+        userId: req.user?._id,
+        resourceId: req.params[resourceIdParam],
+        endpoint: req.originalUrl,
+        ip: req.ip
+      });
+
+      res.status(500).json({
+        success: false,
+        message: 'Internal server error during resource ownership check.',
+        error: 'OWNERSHIP_CHECK_ERROR'
+      });
+    }
+  };
+};
+
+/**
+ * Middleware to check if user has completed profile setup
+ */
+const requireProfileSetup = (req, res, next) => {
+  try {
     if (!req.user) {
       return res.status(401).json({
         success: false,
-        message: 'Authentication required.'
+        message: 'Authentication required.',
+        error: 'AUTHENTICATION_REQUIRED'
       });
     }
 
-    if (!roles.includes(req.user.role)) {
-      return res.status(403).json({
-        success: false,
-        message: `Access denied. Required role: ${roles.join(' or ')}. Your role: ${req.user.role}`
-      });
+    // Check if profile is complete based on role
+    const user = req.user;
+    let isProfileComplete = true;
+    let missingFields = [];
+
+    // Basic required fields for all users
+    if (!user.firstName) {
+      isProfileComplete = false;
+      missingFields.push('firstName');
+    }
+    if (!user.lastName) {
+      isProfileComplete = false;
+      missingFields.push('lastName');
+    }
+    if (!user.phone) {
+      isProfileComplete = false;
+      missingFields.push('phone');
     }
 
-    next();
-  };
-};
-
-/**
- * Doctor-specific authorization
- */
-const authorizeDoctor = async (req, res, next) => {
-  try {
-    if (!req.user || req.user.role !== 'doctor') {
-      return res.status(403).json({
-        success: false,
-        message: 'Doctor access required'
-      });
-    }
-
-    // Get doctor record
-    const Doctor = require('../models/Doctor');
-    const doctor = await Doctor.findOne({ user: req.user._id });
-    
-    if (!doctor) {
-      return res.status(404).json({
-        success: false,
-        message: 'Doctor profile not found'
-      });
-    }
-
-    if (!doctor.isVerified) {
-      return res.status(403).json({
-        success: false,
-        message: 'Doctor profile not verified'
-      });
-    }
-
-    req.doctor = doctor;
-    next();
-  } catch (error) {
-    console.error('Doctor authorization error:', error);
-    return res.status(500).json({
-      success: false,
-      message: 'Error verifying doctor authorization'
-    });
-  }
-};
-
-/**
- * Patient access authorization (for patient or their doctor)
- */
-const authorizePatientAccess = async (req, res, next) => {
-  try {
-    const { patientId } = req.params;
-    
-    if (req.user.role === 'patient') {
-      // Patient can only access their own data
-      const Patient = require('../models/Patient');
-      const patient = await Patient.findOne({ user: req.user._id });
-      
-      if (!patient || patient._id.toString() !== patientId) {
-        return res.status(403).json({
-          success: false,
-          message: 'Cannot access other patient data'
-        });
+    // Role-specific checks
+    if (user.role === 'patient') {
+      if (!user.dateOfBirth) {
+        isProfileComplete = false;
+        missingFields.push('dateOfBirth');
       }
-      
-      req.patient = patient;
-    } else if (req.user.role === 'doctor') {
-      // Doctor can access their patients' data
-      const Patient = require('../models/Patient');
-      const patient = await Patient.findById(patientId);
-      
-      if (!patient) {
-        return res.status(404).json({
-          success: false,
-          message: 'Patient not found'
-        });
+      if (!user.gender) {
+        isProfileComplete = false;
+        missingFields.push('gender');
       }
+    }
 
-      const Doctor = require('../models/Doctor');
-      const doctor = await Doctor.findOne({ user: req.user._id });
-      
-      // Check if doctor has access to this patient
-      if (!patient.primaryDoctor || patient.primaryDoctor.toString() !== doctor._id.toString()) {
-        return res.status(403).json({
-          success: false,
-          message: 'Cannot access patient data - not your patient'
-        });
-      }
-      
-      req.patient = patient;
-      req.doctor = doctor;
-    } else if (req.user.role === 'admin') {
-      // Admin can access any patient data
-      const Patient = require('../models/Patient');
-      const patient = await Patient.findById(patientId);
-      
-      if (!patient) {
-        return res.status(404).json({
-          success: false,
-          message: 'Patient not found'
-        });
-      }
-      
-      req.patient = patient;
-    } else {
-      return res.status(403).json({
+    if (!isProfileComplete) {
+      return res.status(400).json({
         success: false,
-        message: 'Insufficient permissions'
+        message: 'Profile setup is incomplete. Please complete your profile before accessing this resource.',
+        error: 'INCOMPLETE_PROFILE',
+        missingFields: missingFields
       });
     }
 
     next();
   } catch (error) {
-    console.error('Patient access authorization error:', error);
-    return res.status(500).json({
+    logger.error('Profile setup check error:', {
+      error: error.message,
+      stack: error.stack,
+      userId: req.user?._id,
+      endpoint: req.originalUrl,
+      ip: req.ip
+    });
+
+    res.status(500).json({
       success: false,
-      message: 'Error verifying patient access'
+      message: 'Internal server error during profile setup check.',
+      error: 'PROFILE_CHECK_ERROR'
     });
   }
 };
 
 /**
- * Check if user owns resource or has admin privileges
+ * Middleware to validate API key for external integrations
  */
-const checkOwnership = (resourceUserField = 'user') => {
-  return (req, res, next) => {
-    if (!req.user) {
+const validateApiKey = async (req, res, next) => {
+  try {
+    const apiKey = req.header('X-API-Key');
+    
+    if (!apiKey) {
       return res.status(401).json({
         success: false,
-        message: 'Authentication required.'
+        message: 'API key required.',
+        error: 'API_KEY_REQUIRED'
       });
     }
 
-    // Admin can access any resource
-    if (req.user.role === 'admin') {
-      return next();
-    }
-
-    // For other roles, check ownership based on the resource
-    const resourceUserId = req.params.userId || req.params.id;
+    // Validate API key format and check against stored keys
+    // This is a basic implementation - extend based on your API key management strategy
+    const validApiKeys = process.env.VALID_API_KEYS?.split(',') || [];
     
-    if (resourceUserId && resourceUserId !== req.user._id.toString()) {
-      return res.status(403).json({
+    if (!validApiKeys.includes(apiKey)) {
+      return res.status(401).json({
         success: false,
-        message: 'Access denied. You can only access your own resources.'
+        message: 'Invalid API key.',
+        error: 'INVALID_API_KEY'
       });
     }
+
+    req.apiKey = apiKey;
+    req.isApiAccess = true;
+    
+    logger.info('API key validated successfully', {
+      apiKey: apiKey.substring(0, 8) + '...',
+      endpoint: req.originalUrl,
+      method: req.method,
+      ip: req.ip
+    });
 
     next();
-  };
-};
+  } catch (error) {
+    logger.error('API key validation error:', {
+      error: error.message,
+      stack: error.stack,
+      endpoint: req.originalUrl,
+      ip: req.ip
+    });
 
-/**
- * Rate limiting for authentication endpoints
- */
-const authRateLimit = (maxAttempts = 5, windowMs = 15 * 60 * 1000) => {
-  const attempts = new Map();
-
-  return (req, res, next) => {
-    const key = req.ip + req.body.email;
-    const now = Date.now();
-    
-    if (!attempts.has(key)) {
-      attempts.set(key, { count: 1, resetTime: now + windowMs });
-      return next();
-    }
-
-    const attempt = attempts.get(key);
-    
-    if (now > attempt.resetTime) {
-      attempt.count = 1;
-      attempt.resetTime = now + windowMs;
-      return next();
-    }
-
-    if (attempt.count >= maxAttempts) {
-      return res.status(429).json({
-        success: false,
-        message: `Too many login attempts. Please try again in ${Math.ceil((attempt.resetTime - now) / 60000)} minutes.`
-      });
-    }
-
-    attempt.count++;
-    next();
-  };
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error during API key validation.',
+      error: 'API_KEY_VALIDATION_ERROR'
+    });
+  }
 };
 
 module.exports = {
-  generateToken,
-  verifyToken,
-  auth,
   authenticate,
+  optionalAuthenticate,
   authorize,
-  authorizeDoctor,
-  authorizePatientAccess,
-  checkOwnership,
-  authRateLimit
+  checkResourceOwnership,
+  requireProfileSetup,
+  validateApiKey
 };

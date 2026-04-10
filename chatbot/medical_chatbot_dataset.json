@@ -1,0 +1,274 @@
+{
+  "patients": [
+    {
+      "patient_id": "001",
+      "patient_name": "John Smith",
+      "age": 45,
+      "gender": "Male",
+      "contact": "+1-555-0123",
+      "medical_history": ["Hypertension", "Diabetes Type 2"],
+      "allergies": ["Penicillin"],
+      "current_symptoms": "severe headache for three days",
+      "diagnosis": "Tension headache, possible migraine",
+      "prescription": {
+        "medications": [
+          {
+            "name": "Ibuprofen",
+            "dosage": "400mg",
+            "frequency": "Every 6-8 hours as needed",
+            "duration": "3-5 days",
+            "instructions": "Take with food"
+          },
+          {
+            "name": "Sumatriptan",
+            "dosage": "50mg",
+            "frequency": "Once daily as needed",
+            "duration": "PRN (as needed)",
+            "instructions": "For severe migraine episodes only"
+          }
+        ],
+        "lifestyle_advice": [
+          "Stay hydrated - drink at least 8 glasses of water daily",
+          "Get adequate sleep (7-8 hours)",
+          "Avoid stress triggers",
+          "Apply cold compress to forehead"
+        ]
+      },
+      "next_appointment": "2025-10-05",
+      "doctor": "Dr. Sarah Johnson",
+      "last_visit": "2025-09-29"
+    },
+    {
+      "patient_id": "002",
+      "patient_name": "Emily Davis",
+      "age": 28,
+      "gender": "Female",
+      "contact": "+1-555-0124",
+      "medical_history": ["Seasonal allergies"],
+      "allergies": ["Dust mites", "Pollen"],
+      "current_symptoms": "sneezing and runny nose",
+      "diagnosis": "Common cold / Upper respiratory infection",
+      "prescription": {
+        "medications": [
+          {
+            "name": "Cetirizine (Zyrtec)",
+            "dosage": "10mg",
+            "frequency": "Once daily",
+            "duration": "7-10 days",
+            "instructions": "Take in the evening"
+          },
+          {
+            "name": "Nasal Saline Spray",
+            "dosage": "2-3 sprays per nostril",
+            "frequency": "3-4 times daily",
+            "duration": "Until symptoms resolve",
+            "instructions": "Use before meals"
+          }
+        ],
+        "lifestyle_advice": [
+          "Rest and get plenty of sleep",
+          "Stay hydrated with warm fluids",
+          "Use humidifier in bedroom",
+          "Avoid allergen exposure"
+        ]
+      },
+      "next_appointment": "2025-10-12",
+      "doctor": "Dr. Michael Brown",
+      "last_visit": "2025-09-28"
+    },
+    {
+      "patient_id": "003",
+      "patient_name": "Robert Wilson",
+      "age": 62,
+      "gender": "Male",
+      "contact": "+1-555-0125",
+      "medical_history": ["Coronary artery disease", "High cholesterol"],
+      "allergies": ["Aspirin"],
+      "current_symptoms": "chest pain and shortness of breath",
+      "diagnosis": "Possible cardiac event - referred to cardiology",
+      "prescription": {
+        "medications": [
+          {
+            "name": "Nitroglycerin",
+            "dosage": "0.4mg sublingual",
+            "frequency": "As needed for chest pain",
+            "duration": "Keep available at all times",
+            "instructions": "Place under tongue, may repeat every 5 min (max 3 doses)"
+          },
+          {
+            "name": "Metoprolol",
+            "dosage": "25mg",
+            "frequency": "Twice daily",
+            "duration": "Long-term",
+            "instructions": "Take with meals, do not stop abruptly"
+          }
+        ],
+        "lifestyle_advice": [
+          "Immediate medical attention required",
+          "Call 911 if chest pain worsens",
+          "Low-sodium, heart-healthy diet",
+          "Gentle walking as tolerated"
+        ]
+      },
+      "next_appointment": "2025-10-02",
+      "doctor": "Dr. Jennifer Martinez",
+      "last_visit": "2025-09-29",
+      "urgency": "HIGH"
+    },
+    {
+      "patient_id": "004",
+      "patient_name": "Lisa Anderson",
+      "age": 35,
+      "gender": "Female",
+      "contact": "+1-555-0126",
+      "medical_history": ["Anxiety disorder", "GERD"],
+      "allergies": ["Shellfish"],
+      "current_symptoms": "stomach pain and nausea after eating",
+      "diagnosis": "Gastroesophageal reflux disease (GERD) exacerbation",
+      "prescription": {
+        "medications": [
+          {
+            "name": "Omeprazole",
+            "dosage": "20mg",
+            "frequency": "Once daily before breakfast",
+            "duration": "4-6 weeks",
+            "instructions": "Take 30-60 minutes before first meal"
+          },
+          {
+            "name": "Simethicone",
+            "dosage": "40mg",
+            "frequency": "After meals and at bedtime",
+            "duration": "As needed",
+            "instructions": "Chew thoroughly before swallowing"
+          }
+        ],
+        "lifestyle_advice": [
+          "Eat smaller, more frequent meals",
+          "Avoid spicy, fatty, and acidic foods",
+          "Don't lie down within 3 hours of eating",
+          "Elevate head of bed 6-8 inches"
+        ]
+      },
+      "next_appointment": "2025-10-15",
+      "doctor": "Dr. David Kim",
+      "last_visit": "2025-09-27"
+    },
+    {
+      "patient_id": "005",
+      "patient_name": "Michael Thompson",
+      "age": 29,
+      "gender": "Male",
+      "contact": "+1-555-0127",
+      "medical_history": ["Sports injury - previous ankle sprain"],
+      "allergies": ["None known"],
+      "current_symptoms": "twisted ankle with swelling",
+      "diagnosis": "Acute ankle sprain (Grade II)",
+      "prescription": {
+        "medications": [
+          {
+            "name": "Ibuprofen",
+            "dosage": "600mg",
+            "frequency": "Every 8 hours with food",
+            "duration": "5-7 days",
+            "instructions": "Take with food to prevent stomach upset"
+          },
+          {
+            "name": "Topical Diclofenac Gel",
+            "dosage": "Apply thin layer",
+            "frequency": "3-4 times daily",
+            "duration": "7-10 days",
+            "instructions": "Apply to affected area, wash hands after use"
+          }
+        ],
+        "lifestyle_advice": [
+          "Follow RICE protocol: Rest, Ice, Compression, Elevation",
+          "Use crutches for first 48-72 hours",
+          "Ice for 15-20 minutes every 2-3 hours",
+          "Keep ankle elevated above heart level when resting"
+        ]
+      },
+      "next_appointment": "2025-10-08",
+      "doctor": "Dr. Amanda Lopez",
+      "last_visit": "2025-09-29"
+    }
+  ],
+  "medical_conversations": [
+    {
+      "id": "001",
+      "patient_input": "I have been having a severe headache for the past three days",
+      "intent": "symptom_report",
+      "entities": {
+        "symptom": "headache",
+        "severity": "severe",
+        "duration": "three days"
+      },
+      "response": "I understand you're experiencing severe headaches for three days. Persistent headaches can have various causes including stress, dehydration, or underlying conditions. I recommend consulting a healthcare provider, especially since it's been ongoing for several days. In the meantime, ensure you're staying hydrated and getting adequate rest.",
+      "follow_up_questions": [
+        "Are you experiencing any other symptoms like nausea, vision changes, or fever?",
+        "Have you taken any medication for the headache?",
+        "On a scale of 1-10, how would you rate the pain?"
+      ],
+      "urgency_level": "moderate"
+    },
+    {
+      "id": "002",
+      "patient_input": "I think I might have caught a cold I'm sneezing and have a runny nose",
+      "intent": "symptom_report",
+      "entities": {
+        "condition": "cold",
+        "symptoms": ["sneezing", "runny nose"]
+      },
+      "response": "Based on your symptoms of sneezing and runny nose, you may indeed have a common cold. These are typical upper respiratory symptoms. Rest, stay hydrated, and consider over-the-counter remedies. Most colds resolve within 7-10 days.",
+      "follow_up_questions": [
+        "Do you have a fever or sore throat?",
+        "How long have you been experiencing these symptoms?",
+        "Have you been around anyone who was sick recently?"
+      ],
+      "urgency_level": "low"
+    },
+    {
+      "id": "003",
+      "patient_input": "My chest hurts when I breathe deeply and I feel short of breath",
+      "intent": "symptom_report",
+      "entities": {
+        "symptoms": ["chest pain", "shortness of breath"],
+        "trigger": "deep breathing"
+      },
+      "response": "Chest pain with shortness of breath requires immediate medical attention. These symptoms could indicate various conditions ranging from muscle strain to more serious cardiac or pulmonary issues. Please seek emergency medical care or call emergency services immediately.",
+      "follow_up_questions": [
+        "Are you experiencing any dizziness or lightheadedness?",
+        "Do you have any history of heart problems?",
+        "Is the pain sharp or dull?"
+      ],
+      "urgency_level": "high"
+    }
+  ],
+  "medical_categories": {
+    "symptom_report": {
+      "description": "Patient reporting current symptoms or health concerns",
+      "common_entities": ["symptom", "duration", "severity", "location", "trigger"]
+    },
+    "information_request": {
+      "description": "Patient seeking information about medical conditions or treatments",
+      "common_entities": ["condition", "request_type", "specific_topic"]
+    },
+    "patient_query": {
+      "description": "Queries about specific patient information, prescriptions, or records",
+      "common_entities": ["patient_id", "patient_name", "prescription", "appointment"]
+    }
+  },
+  "urgency_levels": {
+    "high": {
+      "description": "Requires immediate medical attention",
+      "response_pattern": "Recommend emergency care or immediate medical consultation"
+    },
+    "moderate": {
+      "description": "Should see healthcare provider within reasonable timeframe",
+      "response_pattern": "Suggest scheduling appointment with healthcare provider"
+    },
+    "low": {
+      "description": "Can often be managed with home care initially",
+      "response_pattern": "Provide self-care advice with guidance on when to seek care"
+    }
+  }
+}
