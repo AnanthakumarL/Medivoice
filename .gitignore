@@ -26,3 +26,21 @@ dist-ssr
 # Virtual environments
 .venv/
 chatbot/.venv/
+
+# Environment variables (secrets) - never commit these
+.env
+.env.local
+.env.*.local
+backend/.env
+frontend/.env
+Agent/.env
+!.env.example
+!backend/.env.example
+!frontend/.env.example
+!Agent/.env.example
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd

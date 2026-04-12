@@ -45,15 +45,19 @@ import {
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
+const AI_API = 'http://localhost:8000';
+
 const AI = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [isListening, setIsListening] = useState(false);
+  const [sessionId] = useState(() => `session_${Date.now()}`);
+  const [activeModelName, setActiveModelName] = useState('AI');
   const [chatMessages, setChatMessages] = useState([
     {
       id: 1,
       type: 'ai',
-      message: "Hello! I'm MedVo AI, your intelligent health companion. I'm here to help you with medical analysis, appointment booking, medication reminders, and personalized health insights. How can I assist you today?",
+      message: "Hello! I'm MediVoice AI, your intelligent health companion powered by real AI. I'm here to help you with medical analysis, appointment booking, medication reminders, and personalized health insights. How can I assist you today?",
       timestamp: new Date(),
       avatar: "🤖",
       isTyping: false
@@ -195,7 +199,7 @@ const AI = () => {
   };
 
   const handleSendMessage = async () => {
-    if (!inputMessage.trim()) return;
+    if (!inputMessage.trim() || isAnalyzing) return;
 
     const userMessage = {
       id: Date.now(),
@@ -207,38 +211,42 @@ const AI = () => {
     };
 
     setChatMessages(prev => [...prev, userMessage]);
+    const currentInput = inputMessage;
     setInputMessage('');
     setIsAnalyzing(true);
 
-    // Simulate AI response with typing effect
-    setTimeout(() => {
-      const aiResponse = generateAIResponse(inputMessage);
+    try {
+      const res = await fetch(`${AI_API}/api/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: currentInput, session_id: sessionId }),
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.detail || 'AI service error');
+      }
+
+      const data = await res.json();
+      setActiveModelName(data.model);
+
       const aiMessage = {
         id: Date.now() + 1,
         type: 'ai',
-        message: aiResponse,
+        message: data.response,
         timestamp: new Date(),
         avatar: "🤖",
         isTyping: false
       };
       setChatMessages(prev => [...prev, aiMessage]);
+    } catch (error: any) {
+      toast({
+        title: "AI Error",
+        description: error.message || "Could not reach the AI agent. Make sure it is running on port 8000.",
+        variant: "destructive",
+      });
+    } finally {
       setIsAnalyzing(false);
-    }, 1500);
-  };
-
-  const generateAIResponse = (userInput: string) => {
-    const input = userInput.toLowerCase();
-    
-    if (input.includes('appointment') || input.includes('book')) {
-      return "I can help you book an appointment! I see you have an upcoming appointment with Dr. Sarah Smith on January 20th. Would you like me to schedule a new appointment or reschedule the existing one? I can also analyze your medical history to suggest the best specialist for your needs.";
-    } else if (input.includes('medication') || input.includes('medicine')) {
-      return "I can see you have 2 medications scheduled. Lisinopril (10mg) is due at 8:00 AM and Metformin (500mg) at 12:00 PM. I can set up smart reminders, track your medication adherence, and alert you about potential interactions. Would you like me to help you manage your medication schedule?";
-    } else if (input.includes('health') || input.includes('analysis')) {
-      return "Based on your recent medical records, your health metrics look excellent! Your blood pressure is optimal (120/80), heart rate is stable at 72 BPM, and your overall health score is 85/100. I recommend continuing your current medication regimen and maintaining regular exercise. Would you like a detailed health report?";
-    } else if (input.includes('reminder') || input.includes('remind')) {
-      return "I'll set up intelligent reminders for you! I can remind you about medications, appointments, health checkups, and even suggest optimal times based on your daily routine. What specific reminders would you like me to configure?";
-    } else {
-      return "I understand you're asking about: '" + userInput + "'. As your AI health assistant, I can help with appointment booking, medication management, health analysis, personalized recommendations, and general health advice. I'm constantly learning from your health data to provide better insights. How else can I assist you today?";
     }
   };
 
@@ -389,8 +397,8 @@ const AI = () => {
                       <Brain className="h-7 w-7" />
                     </div>
                     <div>
-                      <CardTitle className="text-white text-xl">AI Health Assistant</CardTitle>
-                      <p className="text-blue-100 text-sm">Powered by advanced medical AI</p>
+                      <CardTitle className="text-white text-xl">MediVoice AI Health Assistant</CardTitle>
+                      <p className="text-blue-100 text-sm">Model: {activeModelName}</p>
                     </div>
                   </div>
                   <div className="flex items-center space-x-3">
@@ -448,7 +456,7 @@ const AI = () => {
                               <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
                               <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
                             </div>
-                            <span className="text-sm text-gray-600 font-medium">AI is analyzing...</span>
+                            <span className="text-sm text-gray-600 font-medium">MediVoice AI is thinking...</span>
                           </div>
                         </div>
                       </div>

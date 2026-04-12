@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -135,6 +135,8 @@ const DynamicDashboard = () => {
   const [chatHistorySessions, setChatHistorySessions] = useState<Array<{id: string, title: string, date: Date, messages: any[]}>>([]);
   const [isRecording, setIsRecording] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState<Array<{name: string, type: string, url: string}>>([]);
+  const recognitionRef = useRef<any>(null);
+  const chatBottomRef = useRef<HTMLDivElement>(null);
 
   // Mock health data for charts (will be replaced with real data later)
   const [healthMetricsData] = useState([
@@ -390,10 +392,10 @@ const DynamicDashboard = () => {
       }
     }
 
-    // Call the MediVoice Flask chatbot API (configurable via VITE_CHATBOT_URL)
-    const CHATBOT_BASE = import.meta.env.VITE_CHATBOT_URL || 'http://127.0.0.1:5001';
+    // Call the MediVoice AI Agent API (Groq + Gemini with auto-fallback)
+    const CHATBOT_BASE = import.meta.env.VITE_CHATBOT_URL || 'http://127.0.0.1:8000';
     try {
-      const response = await fetch(`${CHATBOT_BASE}/chat`, {
+      const response = await fetch(`${CHATBOT_BASE}/api/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -405,7 +407,7 @@ const DynamicDashboard = () => {
       });
 
       if (!response.ok) {
-        throw new Error(`Chatbot API returned status ${response.status}`);
+        throw new Error(`AI Agent returned status ${response.status}`);
       }
 
       const data = await response.json();
@@ -418,10 +420,9 @@ const DynamicDashboard = () => {
       setChatMessages(prev => [...prev, botMessage]);
     } catch (error) {
       console.error('Error calling chatbot API:', error);
-      // Show error message to user
       const errorMessage = {
         id: (Date.now() + 1).toString(),
-        text: "⚠️ I'm having trouble connecting to the chatbot server. Please ensure the MediVoice chatbot server is running on port 5001. Error: " + (error instanceof Error ? error.message : 'Unknown error'),
+        text: "⚠️ Could not reach the MediVoice AI Agent. Make sure it is running: `cd Agent && python api.py`. Error: " + (error instanceof Error ? error.message : 'Unknown error'),
         sender: 'bot' as const,
         timestamp: new Date()
       };
@@ -429,6 +430,7 @@ const DynamicDashboard = () => {
     } finally {
       setIsChatLoading(false);
     }
+
   };
 
   const handleSaveChatHistory = () => {
@@ -463,19 +465,79 @@ const DynamicDashboard = () => {
   };
 
   const handleVoiceInput = () => {
+    // Stop if already recording
     if (isRecording) {
+      recognitionRef.current?.stop();
       setIsRecording(false);
-      toast({
-        title: "Recording Stopped",
-        description: "Voice input processing..."
-      });
-    } else {
-      setIsRecording(true);
-      // Simulate recording - auto stop after 5 seconds
-      setTimeout(() => {
-        setIsRecording(false);
-      }, 5000);
+      return;
     }
+
+    const SpeechRecognition =
+      (window as any).SpeechRecognition ||
+      (window as any).webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+      toast({
+        title: "Not Supported",
+        description: "Voice input is not supported in your browser. Try Chrome or Edge.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = true;
+    recognition.lang = 'en-US';
+    recognitionRef.current = recognition;
+
+    recognition.onstart = () => {
+      setIsRecording(true);
+      setChatInput('');
+      toast({ title: "🎙️ Listening...", description: "Speak now. I'm listening." });
+    };
+
+    recognition.onresult = (event: any) => {
+      let interim = '';
+      let final = '';
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const transcript = event.results[i][0].transcript;
+        if (event.results[i].isFinal) {
+          final += transcript;
+        } else {
+          interim += transcript;
+        }
+      }
+      // Show live interim text in input
+      setChatInput(final || interim);
+    };
+
+    recognition.onend = () => {
+      setIsRecording(false);
+      recognitionRef.current = null;
+      // Auto-send if we captured something
+      setChatInput(prev => {
+        if (prev.trim()) {
+          // Trigger send after state update
+          setTimeout(() => {
+            const btn = document.getElementById('chatbot-send-btn') as HTMLButtonElement;
+            btn?.click();
+          }, 100);
+        }
+        return prev;
+      });
+    };
+
+    recognition.onerror = (event: any) => {
+      setIsRecording(false);
+      recognitionRef.current = null;
+      const msg = event.error === 'no-speech'
+        ? 'No speech detected. Please try again.'
+        : `Voice error: ${event.error}`;
+      toast({ title: "Voice Error", description: msg, variant: "destructive" });
+    };
+
+    recognition.start();
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -2180,11 +2242,18 @@ const DynamicDashboard = () => {
                         <Button
                           onClick={handleVoiceInput}
                           variant="outline"
-                          className={`border-blue-200 ${isRecording ? 'bg-red-100 border-red-300 animate-pulse' : 'hover:bg-blue-50'}`}
+                          type="button"
+                          title={isRecording ? 'Stop recording' : 'Start voice input'}
+                          className={`border-blue-200 transition-all ${
+                            isRecording
+                              ? 'bg-red-100 border-red-400 animate-pulse shadow-lg shadow-red-200'
+                              : 'hover:bg-blue-50'
+                          }`}
                         >
                           <Mic className={`h-4 w-4 ${isRecording ? 'text-red-600' : 'text-blue-600'}`} />
                         </Button>
                         <Button
+                          id="chatbot-send-btn"
                           onClick={handleSendMessage}
                           disabled={!chatInput.trim() || isChatLoading}
                           className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700"
